@@ -8,6 +8,15 @@ Created on Fri Mar 11 14:50:22 2016
 
 import pandas as pd
 import numpy as np
+from skmonaco import mcimport
+
+I = pd.DataFrame({'x':{0:0,1:1,2:1,3:0}})
+llh = lambda L: likelihood(I,L)
+result,error = mcimport(llh, 100, np.random.exponential, nprocs=4 )
+
+def likelihood(I,L):
+    I = np.matrix(I)
+    return likelihood_per_period(1)
 
 def likelihood_window(I,L):
     """
