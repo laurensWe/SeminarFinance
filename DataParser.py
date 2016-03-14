@@ -64,15 +64,30 @@ for dates in instruments.index:
                 #df.join(dftemp, how='inner')                
                 #df.loc[(ints,sec1),(dates,sec2) = simpleMatrix.loc[sec1,sec2]
                 #df.loc[dates,ints] = simpleMatrix.to_dict()
-
-
-
+                
 #itertools.combinations(instruments.columns,sectors.columns) 
-#list(zip(instruments.columns,sectors.columns))          
+#list(zip(instruments.columns,sectors.columns))  
+mic = pd.MultiIndex.from_tuples(tuples=df.columns, names=['instrument','sector'])
+mii = pd.MultiIndex.from_tuples(tuples=df.index, names=['date','sector'])
+df2 = pd.DataFrame(df,index=mii,columns=mic)
+
+#%% Section for calculation the In-degree interconnectedness
+
+newDF = pd.
+tempDF = pd.DataFrame(columns=horizontalTuples)
+
+for dates in instruments.index:    
+    for i in df.index:
+        if dates in i:            
+            tempDF = tempDF.join(df.loc[i,:])
+        
+            
+        
+
+#%% Section for calculation of the Herfindahl-Hirschman Index
+        
                 
             
-                
-                                
-                
+   
                 
     
