@@ -17,7 +17,7 @@ file1 = file1.set_index(file1.Time)
 mdata =file1[['S&LG', 'FG', 'DF', 'HH&NP', 'W', 'NFB']]
 #%% moving window 
 #window length
-i = 80
+i = 50
 listje = ['S&LG', 'FG', 'DF', 'HH&NP', 'W', 'NFB']
 j = 0
 DGC = pd.Series(np.zeros(255), index=range(0,255))
@@ -28,7 +28,7 @@ while (j < 255-i):
     
     mdata1=mdata[j:(j+i)]
     model = tsa.VAR(mdata1)
-    results = model.fit(4)  
+    results = model.fit(5)  
     results.summary()
 # in this part we calculate the degree of granger causality
     DGC1 = 0
