@@ -4,6 +4,11 @@ Created on Fri Mar 11 14:50:22 2016
 
 @author: Sebastiaan Vermeulen
 
+TODO: calculate R0
+TODO: fix choice of proposals of metropolis sampler: use exponential 
+        distribution with location [-current]
+TODO: add possibility to print output after each iteration
+TODO: add parameter significance statistics
 """
 # preamble
 
@@ -40,7 +45,9 @@ def doEpidemicModel(crisis_data, window_size, precision = 1e-3,starting_value=No
     mean : numpy matrix
         the parameters' sample mean 
     variance : numpy matrix
-        the parameters' sample variance 
+        the parameters' sample variance. This is not a measure of the 
+        parameters' significance! it just gives an impression of how precise
+        the estimated mean is.
     """
     (T,N) = crisis_data.shape
     if (window_size < N) or (window_size > T):
@@ -105,10 +112,10 @@ class epidemicModel(object):
             if   (i == 1):
                 return 1-np.exp(-l2)
             else:# i = 0
-                return np.exp(-l2)
+                return np.exp(-l2) 
         else: # i_lag = 1
             if (i == 1):
-                return 1 - np.exp(-l2) + np.exp(-l1)  - l1/(l1+l2)*(1 - np.exp(-l1-l2))
+                return 1 - np.exp(-l2) + np.exp(-l1)  - l2/(l1+l2)*(1 - np.exp(-l1-l2))
             else:# i = 0 
                 return np.exp(-l2)*(1-np.exp(-l1))
             
