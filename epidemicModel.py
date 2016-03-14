@@ -62,6 +62,7 @@ def doEpidemicModel(crisis_data, window_size, precision = 1e-3,starting_value=No
 class epidemicModel(object):
     
     def __init__(self,I,window_size,precision):
+        # initialize the class variables
         self.T,self.N = I.shape
         self.I = np.matrix(I)
         self.window_size = window_size
@@ -69,17 +70,17 @@ class epidemicModel(object):
         self.shape = (self.T-self.window_size,self.N,self.N)
 
     def run(self,starting_value,info):
+        # main program that tracks the different steps we wish to follow
+        self.prior = starting_value
         mean, var, count = self.optimize(starting_value,info)
-        R0 = self.R0(mean)
+        R0 = self.R0(mean,info)
         return R0, mean, var, count
     
-    def R0(self,L):
-        r = np.ndarray(self.T-self.window_size,self.N)
-        i = np.ones(self.N)
-        for start in range(1,self.T-self.window_size):
-            lambdas = i*L[start,:,:]
-            p_i = L[start,:,:].diagonal()*(lambdas - L[start,:,:].diagonal())*np.power(lambdas,-2)
-            r[start,:] = p_i/(1-p_i)**2
+    def R0(self,L,info):
+        # R0 is the sum of all infection rates
+        r = np.sum(L,axis=2)-L.diagonal(axis1=1,axis2=2)
+        if info>0:
+            print('done calculating R0')
         return r
     
     def optimize(self,starting_value,info):
@@ -89,7 +90,9 @@ class epidemicModel(object):
         m1 = current.copy()
         m2 = current.copy()**2
         while (error > self.precision):
+            # sample a new datapoint
             self.metropolis_hastings_sampler(current)
+            # update the 1st and 2nd moment and the error
             m1 += current
             m2 += np.power(current,2)
             error = np.mean( (m2/counter-np.power(m1/counter,2))/counter )
@@ -99,33 +102,74 @@ class epidemicModel(object):
                     print('first moment:\n',m1/counter)
                     if info>2:
                         print('second moment:\n',m2/counter)
-                    
+        if info>0:
+            print('done with optimization')            
         return m1/counter, (m2/counter-np.power(m1/counter,2)), counter
            
     def metropolis_hastings_sampler(self,current):
+        """
+        In the current implementation the estimates will be correlated through 
+        time. To decrease this correlation, the calculation of new proposals 
+        and acceptance rates should be moved inside the loop. This is comput-
+        ationally expensive however, and possibly the reverse of what we want.
+        """
+        # propose a new point based on the current point: exponential with mean [current]
         proposal = np.multiply(np.random.exponential(size=self.shape), current)
+        # the acceptance rate of the metropolis sampler for this iteration
         acceptance_rate = np.random.uniform()
         condition_number = self.exp_joint_pdf(current,proposal)/self.exp_joint_pdf(proposal,current)
+        # loop over all windows        
         for start in range(1,self.T-self.window_size):
             probability = self.likelihood_per_window(start,proposal[start,:,:]) \
                 / self.likelihood_per_window(start,current[start,:,:]) 
+            # if the proposal should be accepted, update current. else keep current.
             if probability*condition_number > acceptance_rate:
-                current[start,:,:] = proposal[start,:,:]
+                current[start,:,:] = proposal[start,:,:].copy()
         
     # start may run from 1 to N-window_size
     def likelihood_per_window(self,start,L):
-        likelihood = 1
+        # initialize the likelihood with the prior
+        likelihood = self.exp_joint_pdf(L,self.prior)
+        # nicely format the parameters
+        p = L.diagonal()
+        p_tildes = 1-np.prod(1-L+np.eye(self.N)*p,axis=0)   
+        # loop over all times in the window
         for t in range(self.window_size):
-            likelihood *= self.likelihood_per_period(start+t,L)
+            likelihood *= self.likelihood_per_period(start+t,p,p_tildes)
         return likelihood
+    
+    def likelihood_per_period(self,t,p,p_tildes):
+        likelihood = 1     
+        # loop over all sectors
+        for i in range(self.N):
+            likelihood *= self.p(self.I[t,i], self.I[t-1,i],  p[i], p_tildes[i])
+        return likelihood
+            
+    def p(i,i_lag,p_i,p_tilde):
+        # probability according to discrete (geometric) distribution
+        if (i_lag == 0):
+            if   (i == 1):
+                return p_tilde*(1-p_i)
+            else:# i = 0
+                return p_i*p_tilde + 1 - p_i
+        else: # i_lag = 1
+            if (i == 1):
+                return 1-p_i
+            else:# i = 0 
+                return p_i
+            
+    def exp_joint_pdf(self,x,b):        
+        # distribution function of the joint exponential distribution
+        return np.multiply(1/b,np.exp(x/b)).prod()
         
-    def likelihood_per_period(self,t,L):
-        likelihood = 1
-        lambdas =  self.I[t-1,:]*np.multiply(L,1-np.eye(self.N)) # all the lambda-tilde's
-        for idx in range(self.N):
-            likelihood *= self.p(self.I[t,idx], self.I[t-1,idx],  L[idx,idx], lambdas[idx])
-        return likelihood
-             
+        
+        
+        
+class deprecated_functions(epidemicModel):
+    """
+    These functions are kept because they refer to another probabilistic model,
+    they are not necessarily decrepated.
+    """       
     def p(i,i_lag,l1,l2):
         if (i_lag == 0):
             if   (i == 1):
@@ -136,7 +180,22 @@ class epidemicModel(object):
             if (i == 1):
                 return 1 - np.exp(-l2) + np.exp(-l1)  - l2/(l1+l2)*(1 - np.exp(-l1-l2))
             else:# i = 0 
-                return np.exp(-l2)*(1-np.exp(-l1))
-            
-    def exp_joint_pdf(self,x,b):        
-        return np.multiply(1/b,np.exp(x/b)).prod()
+                return np.exp(-l2)*(1-np.exp(-l1))    
+                
+    def R0(self,L,info):
+        r = np.ndarray(self.T-self.window_size,self.N)
+        i = np.ones(self.N)
+        for start in range(1,self.T-self.window_size):
+            lambdas = i*L[start,:,:]
+            p_i = L[start,:,:].diagonal()*(lambdas - L[start,:,:].diagonal())*np.power(lambdas,-2)
+            r[start,:] = p_i/(1-p_i)**2
+        if info>0:
+            print('done calculating R0')
+        return r
+        
+    def likelihood_per_period(self,t,L):
+        likelihood = 1
+        lambdas =  self.I[t-1,:]*np.multiply(L,1-np.eye(self.N)) # all the lambda-tilde's
+        for idx in range(self.N):
+            likelihood *= self.p(self.I[t,idx], self.I[t-1,idx],  L[idx,idx], lambdas[idx])
+        return likelihood
