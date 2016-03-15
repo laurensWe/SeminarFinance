@@ -72,21 +72,38 @@ mii = pd.MultiIndex.from_tuples(tuples=df.index, names=['date','sector'])
 df2 = pd.DataFrame(df,index=mii,columns=mic)
 
 #%% Section for calculation the In-degree interconnectedness
+#initialisation
+inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
+threshold = 0.1
 
-newDF = pd.
-tempDF = pd.DataFrame(columns=horizontalTuples)
-
-for dates in instruments.index:    
-    for i in df.index:
-        if dates in i:            
-            tempDF = tempDF.join(df.loc[i,:])
-        
-            
-        
+#Calculate the in degree interconnectedness for each sector for each quarter
+for dates in instruments.index:
+    tempDate = df2.loc[dates].transpose().sum(level=[1])
+    totals = tempDate.sum()
+    amountSec = len(totals)
+    for secprim in totals.index:
+        count = 0
+        for secsec in totals.index:
+            if tempDate.loc[secprim,secsec]/totals[secprim] > threshold and secsec != secprim:
+                count += 1
+        inDegree.loc[dates,secprim] = count / (amountSec - 1)
+    
 
 #%% Section for calculation of the Herfindahl-Hirschman Index
-        
-                
+#initialisation
+hhiIndexes = pd.DataFrame(index=instruments.index, columns=sectors.columns)
+
+for dates in instruments.index:
+    tempDate = df2.loc[dates].transpose().sum(level=[1])
+    totals = tempDate.sum()
+    amountSec = len(totals)
+    for secprim in totals.index:
+        hhiIndex = 0
+        for secsec in totals.index:
+            if secsec != secprim:
+                hhiIndex += tempDate.loc[secprim,secsec]/totals[secprim]
+        hhiIndexes.loc[dates,secprim] = (hhiIndex - 1/amountSec)/(1-1/amountSec)
+
             
    
                 
