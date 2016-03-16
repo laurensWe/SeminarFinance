@@ -74,7 +74,8 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 #%% Section for calculation the In-degree interconnectedness
 #initialisation
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
-threshold = 0.1
+threshold = 0.01
+
 
 #Calculate the in degree interconnectedness for each sector for each quarter
 for dates in instruments.index:
@@ -87,11 +88,18 @@ for dates in instruments.index:
             if tempDate.loc[secprim,secsec]/totals[secprim] > threshold and secsec != secprim:
                 count += 1
         inDegree.loc[dates,secprim] = count / (amountSec - 1)
+
+systemInDegree = pd.DataFrame(columns=['SystemInDegree'],index=instruments.index)
+
+#System In-Degree Interconnectedness
+for dates in instruments.index:
+    systemInDegree.loc[dates,'SystemInDegree'] = inDegree.loc[dates].sum() / amountSec
     
+
 
 #%% Section for calculation of the Herfindahl-Hirschman Index
 #initialisation
-hhiIndexes = pd.DataFrame(index=instruments.index, columns=sectors.columns)
+hhiIndices = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 
 for dates in instruments.index:
     tempDate = df2.loc[dates].transpose().sum(level=[1])
@@ -102,9 +110,17 @@ for dates in instruments.index:
         for secsec in totals.index:
             if secsec != secprim:
                 hhiIndex += tempDate.loc[secprim,secsec]/totals[secprim]
-        hhiIndexes.loc[dates,secprim] = (hhiIndex - 1/amountSec)/(1-1/amountSec)
+        hhiIndices.loc[dates,secprim] = (hhiIndex - 1/amountSec)/(1-1/amountSec)
 
-            
-   
+systemHHI = pd.DataFrame(columns=['SystemHHI'],index=instruments.index)
+
+#System H-H Index
+for dates in instruments.index:
+    systemHHI.loc[dates,'SystemHHI'] = hhiIndices.loc[dates].sum() / amountSec
+
+#%%Write away to Excel files
+
+systemInDegree.to_excel("sytemInDegree.xlsx")
+systemHHI.to_excel("systemHHI.xlsx")
                 
     
