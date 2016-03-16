@@ -20,7 +20,7 @@ file1 = file1.set_index(file1.Time)
 mdata =file1[['S&LG', 'FG', 'DF', 'HH&NP', 'W', 'NFB']]
 #%% initialize 
 #window length
-i = 100
+i = 50
 n = 1 #number of PC's we use (for PCA I measure)
 listje = ['S&LG', 'FG', 'DF', 'HH&NP', 'W', 'NFB']
 pcalist = ['1', '2', '3', '4', '5', '6']
@@ -34,23 +34,25 @@ SIi = pd.DataFrame(np.zeros((255,6)), index=range(0,255), columns=listje)
 StabilityVAR = pd.Series(np.zeros(255), index=range(0,255))
 StabilityVAR = pd.DataFrame(data=StabilityVAR)
 PCAall = pd.DataFrame(np.zeros((255,6)), index=range(0,255), columns=pcalist)
-
+JBtest = pd.Series(np.zeros(255), index=range(0,255))
+JBtest = pd.DataFrame(data=JBtest)
 #%% full model
 mdata_full=mdata
 model_full = tsa.VAR(mdata)
-results_full = model_full.fit(5)  
+results_full = model_full.fit(4)  
 results_full.summary()
 results_full.irf(12).plot()
 results_full.resid.plot()
 results_full.is_stable(verbose=False)
-
+results_full.test_normality(signif=0.05, verbose=True)
 #%% moving window estimation
 while (j < 255-i):
     mdata1=mdata[j:(j+i)]
     model = tsa.VAR(mdata1)
-    results = model.fit(5)  
+    results = model.fit(4)  
     results.summary()
     StabilityVAR.set_value(j+i,0,results.is_stable(verbose=False))
+    JBtest.set_value(j+i,0,results.test_normality(signif=0.05, verbose=False)['statistic'])
 # in this part we calculate the degree of granger causality
     DGC1 = 0
     N = 6.0
@@ -102,10 +104,12 @@ DGCi[i:255].set_index(file1.Time[i:255]).plot()
 SIi[i:255].set_index(file1.Time[i:255]).plot()
 StabilityVAR[i:255].set_index(file1.Time[i:255]).plot()
 PCAall[i:255].set_index(file1.Time[i:255]).plot()
+JBtest[i:255].set_index(file1.Time[i:255]).plot()
 #%%
-SI.to_excel('SpillOverIndex.xlsx')
-DGC.to_excel('DGC.xlsx')
-DGCi.to_excel('DGCi.xlsx')
-SIi.to_excel('SIi.xlsx')
-StabilityVAR.to_excel('StabilityVAR.xlsx')
-PCAall.to_excel('PCA interconnectedness.xlsx')
+#SI.to_excel('SpillOverIndex.xlsx')
+#DGC.to_excel('DGC.xlsx')
+#DGCi.to_excel('DGCi.xlsx')
+#SIi.to_excel('SIi.xlsx')
+#StabilityVAR.to_excel('StabilityVAR.xlsx')
+#PCAall.to_excel('PCA interconnectedness.xlsx')
+JBtest.to_excel('JBtest.xlsx')
