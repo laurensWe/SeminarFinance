@@ -46,6 +46,8 @@ def doEpidemicModel(crisis_data, window_size, precision = 1e-3,starting_value=No
     count : scalar
         number of sampled datapoints.
     """
+    
+    # some checks to help with the debugging
     (T,N) = crisis_data.shape
     if (window_size < N) or (window_size > T):
         raise ValueError('The window size should be between the number of se'+\
@@ -56,7 +58,11 @@ def doEpidemicModel(crisis_data, window_size, precision = 1e-3,starting_value=No
     if (t!=T) or (n!=m) or (n!=N):
         raise ValueError('The supplied starting parameter should have dimens'+\
             'ions [#obs.]*[#sectors]*[n#sectors].')
+            
+    # initialize the model
     model = epidemicModel(crisis_data,window_size,precision)
+    
+    # run the model
     return model.run(starting_value,info)
 
 class epidemicModel(object):
@@ -114,10 +120,11 @@ class epidemicModel(object):
         ationally expensive however, and possibly the reverse of what we want.
         """
         # propose a new point based on the current point: exponential with mean [current]
-        proposal = np.multiply(np.random.exponential(size=self.shape), current)
+        proposal = np.random.uniform(0,1,size=self.shape)
         # the acceptance rate of the metropolis sampler for this iteration
         acceptance_rate = np.random.uniform()
-        condition_number = self.exp_joint_pdf(current,proposal)/self.exp_joint_pdf(proposal,current)
+        # condition number is 1 because the uniform distribution is symmetric
+        condition_number = 1
         # loop over all windows        
         for start in range(1,self.T-self.window_size):
             probability = self.likelihood_per_window(start,proposal[start,:,:]) \
@@ -128,8 +135,8 @@ class epidemicModel(object):
         
     # start may run from 1 to N-window_size
     def likelihood_per_window(self,start,L):
-        # initialize the likelihood with the prior
-        likelihood = self.exp_joint_pdf(L,self.prior)
+        # initialize the likelihood with the uniform prior
+        likelihood = 1
         # nicely format the parameters
         p = L.diagonal()
         p_tildes = 1-np.prod(1-L+np.eye(self.N)*p,axis=0)   
@@ -157,45 +164,3 @@ class epidemicModel(object):
                 return 1-p_i
             else:# i = 0 
                 return p_i
-            
-    def exp_joint_pdf(self,x,b):        
-        # distribution function of the joint exponential distribution
-        return np.multiply(1/b,np.exp(x/b)).prod()
-        
-        
-        
-        
-class deprecated_functions(epidemicModel):
-    """
-    These functions are kept because they refer to another probabilistic model,
-    they are not necessarily decrepated.
-    """       
-    def p(i,i_lag,l1,l2):
-        if (i_lag == 0):
-            if   (i == 1):
-                return 1-np.exp(-l2)
-            else:# i = 0
-                return np.exp(-l2) 
-        else: # i_lag = 1
-            if (i == 1):
-                return 1 - np.exp(-l2) + np.exp(-l1)  - l2/(l1+l2)*(1 - np.exp(-l1-l2))
-            else:# i = 0 
-                return np.exp(-l2)*(1-np.exp(-l1))    
-                
-    def R0(self,L,info):
-        r = np.ndarray(self.T-self.window_size,self.N)
-        i = np.ones(self.N)
-        for start in range(1,self.T-self.window_size):
-            lambdas = i*L[start,:,:]
-            p_i = L[start,:,:].diagonal()*(lambdas - L[start,:,:].diagonal())*np.power(lambdas,-2)
-            r[start,:] = p_i/(1-p_i)**2
-        if info>0:
-            print('done calculating R0')
-        return r
-        
-    def likelihood_per_period(self,t,L):
-        likelihood = 1
-        lambdas =  self.I[t-1,:]*np.multiply(L,1-np.eye(self.N)) # all the lambda-tilde's
-        for idx in range(self.N):
-            likelihood *= self.p(self.I[t,idx], self.I[t-1,idx],  L[idx,idx], lambdas[idx])
-        return likelihood
