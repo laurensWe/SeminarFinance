@@ -8,40 +8,28 @@ Created on Fri Mar 16 15:09:22 2016
 from epidemicModel import doEpidemicModel
 import numpy as np
 import pandas as pd
-from multiprocessing import Pool
 import time
+from ftplib import FTP_TLS
 
 df = pd.read_excel('crisisPerSector.xlsx',index_col=0)
 df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
-
-#%%
-
 n=100
 nprocs =1
 n_iter = 5e4
-x = []
 
-def f(_):
-    global df,n,n_iter,nprocs,x
-    x.append(doEpidemicModel(df,n,n_iter=n_iter/nprocs,info=0))
-
-
+def upload(fname):
+    ftp = FTP_TLS('ftp.servage.net', '3zesp91tTNBV8', 'sbI3cEyWY6pMy8')
+    print('connection open. storing')
+    ftp.storbinary('STOR %12f'%(time.time()), open('rooster.ics', 'rb'))
+    print('storing complete. closing connection')
+    ftp.quit()
  
 if __name__ == '__main__':
     while True:
-        t = time.time()
-        if nprocs == 1:
-            results = doEpidemicModel(df,n,n_iter=n_iter,info=0)
-        else:
-            p = Pool(nprocs)
-            p.map(f,range(nprocs))
-            p.close()
-            p.join()
-            results = np.sum(x,axis=0)/nprocs
-        t = time.time() - t
-        #pd.DataFrame(R0).to_excel('window_'+str(n)+'.xlsx')
-        #np.save('mean epidemic model - window %d - iter %d - %f'%(n,n_iter,time.time()), results[0])
-        #np.save('variance epidemic model - window %d - iter %d - %f'%(n,n_iter,time.time()), results[1])
-        # results = [mean,variance]    
-        np.save('epidemic model - window %d - iter %d - %f'%(n,n_iter,time.time()), results)
-        
+        results = doEpidemicModel(df,n,n_iter=n_iter,info=0)
+        fname = 'epidemic model - window %d - iter %d - %f.npy'%(n,n_iter,time.time())
+        np.save(fname, results)
+        try:
+            upload(fname)
+        finally:
+            pass
