@@ -20,7 +20,7 @@ n_iter = 5e4
 def upload(fname):
     ftp = FTP_TLS('ftp.servage.net', '3zesp91tTNBV8', 'sbI3cEyWY6pMy8')
     print('connection open. storing')
-    ftp.storbinary('STOR %12f'%(time.time()), open('rooster.ics', 'rb'))
+    ftp.storbinary('STOR '+fname, open(fname, 'rb'))
     print('storing complete. closing connection')
     ftp.quit()
  
