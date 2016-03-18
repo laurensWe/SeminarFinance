@@ -9,7 +9,6 @@ Created on Fri Mar 11 14:50:22 2016
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
-import multiproc
 
 # using Metropolis-Hastings sampling for mean calculation
 def doEpidemicModel(crisis_data,window_size,n_iter,starting_value=None,info=0):
@@ -79,6 +78,7 @@ class epidemicModel(object):
         self.I = np.array(I).astype(np.bool)
         self.window_size = window_size
         self.shape = (self.T-self.window_size,self.N,self.N)
+        self.likelihoods = np.ones(self.shape[0])*1e-6
     
     def optimize(self,starting_value,n_iter,info):
         counter = 1
@@ -87,13 +87,15 @@ class epidemicModel(object):
         m2 = np.power(current,2)
         while (counter < n_iter):
             counter += 1
+            if not counter % 100:
+                print(counter)
             # sample a new datapoint
             self.metropolis_hastings_sampler(current)
             # update the 1st and 2nd moment and the variance
             m1 += current
             m2 += np.power(current,2)
-        # TODO return array of results
-        return m1/counter, m2/counter-np.power(m1/counter,2)
+            
+        return np.array([m1/counter, m2/counter-np.power(m1/counter,2)])
            
     def metropolis_hastings_sampler(self,current):
         """
@@ -108,14 +110,15 @@ class epidemicModel(object):
         acceptance_rate = np.random.uniform()
         # loop over all windows   
         p_i = proposal.diagonal(axis1=1,axis2=2)    
-        p_tildes = 1-np.prod(1-proposal, axis = 1)/(1-p_i)
-        
+        p_tildes = 1-np.prod(1-proposal, axis = 1)/(1-p_i)        
         for start in range(1,self.T-self.window_size):
-            probability = self.likelihood_per_window(start,p_i[start,:],p_tildes[start,:]) \
-                / self.likelihood_per_window(start,p_i[start,:],p_tildes[start,:]) 
+            a = self.likelihoods[start]
+            b = self.likelihood_per_window(start,p_i[start,:],p_tildes[start,:])
+                
             # if the proposal should be accepted, update current. else keep current.
-            if probability > acceptance_rate:
+            if b/a > acceptance_rate:
                 current[start,:,:] = proposal[start,:,:]  
+                self.likelihoods[start] = b
         
     # start may run from 1 to N-window_size
     def likelihood_per_window(self,start,p_i,p_tildes):
@@ -127,3 +130,13 @@ class epidemicModel(object):
                     * np.repeat(p_tildes.reshape((1,p_tildes.size)),self.window_size,axis=0) \
                     -  ~self.I[start:start+self.window_size,:])
         return np.abs(likelihood)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
