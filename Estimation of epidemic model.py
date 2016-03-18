@@ -32,4 +32,4 @@ if __name__ == '__main__':
         try:
             upload(fname)
         finally:
-            pass
+            continue
