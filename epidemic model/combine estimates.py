@@ -16,11 +16,11 @@ def read_all():
     x = np.array(x)
     total = np.sum(counts)
     mean = np.sum(x[:,0,:,:,:]*np.array(counts).reshape((len(counts),1,1,1)),axis=0)/total
-    var = np.sum(x[:,1,:,:,:],axis=0)
+    var = np.sum(x[:,1,:,:,:]*np.array(counts).reshape((len(counts),1,1,1))**2,axis=0)/total**2
     delta = epidemicModel.precision(var, n_iter=total)
     r = epidemicModel.R0(mean)    
-    return mean,var,delta,r,total
+    return mean,var,delta,r,total,x[-1]
     
 
 if __name__ == '__main__':
-    mean,var,delta,r,total = read_all()
+    mean,var,delta,r,total,laatste = read_all()
