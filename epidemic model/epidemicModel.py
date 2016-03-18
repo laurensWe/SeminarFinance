@@ -67,7 +67,7 @@ def R0(L):
     r = (np.sum(L,axis=2)-L.diagonal(axis1=1,axis2=2))/L.diagonal(axis1=1,axis2=2)
     return r
     
-def precision(variance, probability,n_iter):
+def precision(variance, n_iter, probability=.95):
     return np.max(variance)*norm.ppf(.5+probability/2)/np.sqrt(n_iter)
 
 class epidemicModel(object):
