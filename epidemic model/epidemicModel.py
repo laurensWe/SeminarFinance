@@ -54,7 +54,9 @@ def R0(L):
     """
     Use this function to get an approximate R0 from the parameter distributions
     """
-    r = (np.sum(L,axis=2)-L.diagonal(axis1=1,axis2=2))/L.diagonal(axis1=1,axis2=2)
+    one = np.ndim(L)-2
+    two = one+1
+    r = (np.sum(L,axis=two)-L.diagonal(axis1=one,axis2=two))/L.diagonal(axis1=one,axis2=two)
     return r
     
 def precision(variance, n_iter, probability=.95):
@@ -93,13 +95,16 @@ def test_geom_estimator():
     pyplot.show()
     return p_
 
+def printout(arr,n_dec=6,newline='\n',delimiter=' '):
+    form = '{:.'+str(n_dec)+'f}'
+    print( newline.join(map(lambda row: delimiter.join(map(form.format, row)),arr)) )
 
 class epidemicModel(object):
     
     def __init__(self,I):
         # initialize the class variables
         self.I = np.array(I,dtype=bool)
-        self.p = np.sum(self.I[:-1,:] & ~self.I[1:,:], axis=0) / np.sum(I, axis=0) # number of streak ends / total length of streaks
+        self.p = np.sum(self.I[:-1,:] & ~self.I[1:,:], axis=0) / np.sum(self.I, axis=0) # number of streak ends / total length of streaks
         self.T,self.N = I.shape
         self.I = np.array(I,dtype=bool)
         self.likelihood = -1e16
@@ -113,7 +118,7 @@ class epidemicModel(object):
         # loop n_iter times
         for counter in range(int(n_iter)):
             if not counter % 10000:
-                print('%.0e'%counter)
+                print('%.4e'%counter)
             self.draw_next_MH_sample()
             m1 += self.current
             m2 += np.power(self.current,2)           
@@ -134,12 +139,7 @@ class epidemicModel(object):
         np.place(ll, ll==0, 1) # remove the starters of an epidemic period, which happens with p=0 (because no one is sick)
         return np.sum(np.log(np.abs( ll )))
        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+if __name__ == '__main__':
+    L,I = test_data(5,100)    
+    doEpidemicModel(I,10)
+    printout(np.array([[1,2],[3,4]]))

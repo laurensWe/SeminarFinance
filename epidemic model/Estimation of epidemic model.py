@@ -5,17 +5,20 @@ Created on Fri Mar 16 15:09:22 2016
 @author: Sebastiaan Vermeulen
 
 """
-from epidemicModel import doEpidemicModel
+from epidemicModel import doEpidemicModel, R0,printout
 import numpy as np
 import pandas as pd
+from matplotlib import style,pyplot
 import time
 from ftplib import FTP_TLS
+style.use('ggplot')
 
-df = pd.read_excel('crisisPerSector.xlsx',index_col=0)
+df = pd.read_excel('crisisPerSector.xlsx',index_col=0,converters={i:bool for i in range(1,7)})
 df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
-n=1e7
+arr = np.array(df)
 nprocs =1
-n_iter = 5e4
+n_iter = 1e7
+n = 1
 
 def upload(fname):
     ftp = FTP_TLS('ftp.servage.net', '3zesp91tTNBV8', 'sbI3cEyWY6pMy8')
@@ -23,12 +26,23 @@ def upload(fname):
     ftp.storbinary('STOR '+fname, open(fname, 'rb'))
     print('storing complete. closing connection')
     ftp.quit()
- 
-if __name__ == '__main__':
+
+def doe_iets():
     results = doEpidemicModel(df,n_iter=n_iter)
     fname = 'epidemic model - window %d - iter %d - %f.npy'%(n,n_iter,time.time())
     np.save(fname, results)
     try:
         upload(fname)
     finally:
-        print('de volgende rondeeeee')
+        print('done')
+    
+if __name__ == '__main__':
+    # doe dit of voer zelf doe_iets een keertje uit
+    results = np.load('epidemic model - window 1 - iter 10000000 - 1458583174.812032.npy')
+    R0(results[0,:,:])
+    printout(results[1,:,:])
+    np.sum(arr[:-1,:] & ~arr[1:,:], axis=0) # number of crises
+    np.sum(~arr[:-1,:].any(axis=1) & arr[1:,:].T, axis=1) # number of crisis starts
+    np.sum(df, axis=0) # number of quarters in crisis
+    np.sum(df, axis=0)/255 # % of quarters in crisis
+    ax = df.sum(axis=1).plot(kind='area')    
