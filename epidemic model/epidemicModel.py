@@ -7,11 +7,12 @@ Created on Fri Mar 11 14:50:22 2016
 """
 # preamble
 import numpy as np
-import pandas as pd
 from scipy.stats import norm
+from matplotlib import pyplot,style
+style.use('ggplot')
 
 # using Metropolis-Hastings sampling for mean calculation
-def doEpidemicModel(crisis_data,window_size,n_iter,starting_value=None,info=0):
+def doEpidemicModel(crisis_data,n_iter): 
     """
     Compute the expectation and variance of the bayes-estimator for the model 
     specified in our paper. The posterior distribution is sampled using a 
@@ -47,90 +48,92 @@ def doEpidemicModel(crisis_data,window_size,n_iter,starting_value=None,info=0):
     count : scalar
         number of sampled datapoints.
     """
-    
-    # some checks to help with the debugging
-    (T,N) = crisis_data.shape
-    if (window_size < N) or (window_size > T):
-        raise ValueError('The window size should be between the number of se'+\
-            'ctors and the number of observations.')
-    if starting_value is None:
-        starting_value = np.random.uniform(size=(T-window_size,N,N))
-    (t,n,m) = starting_value.shape       
-    if (t!=T-window_size) or (n!=m) or (n!=N):
-        raise ValueError('The supplied starting parameter should have dimens'+\
-            'ions [#obs.]*[#sectors]*[#sectors].')
-    # initialize the model
-    return epidemicModel(crisis_data,window_size).optimize(starting_value,n_iter,info)
+    return epidemicModel(crisis_data).optimize(n_iter)
 
 def R0(L):
-    # R0 is the sum of all infection rates
+    """
+    Use this function to get an approximate R0 from the parameter distributions
+    """
     r = (np.sum(L,axis=2)-L.diagonal(axis1=1,axis2=2))/L.diagonal(axis1=1,axis2=2)
     return r
     
 def precision(variance, n_iter, probability=.95):
+    """"
+    Use this function to determine what precision you get from n_iters given some estimated variance.
+    """
     return np.max(variance)*norm.ppf(.5+probability/2)/np.sqrt(n_iter)
+    
+def test_data(n,t,without_systemic_risk=True):
+    """
+    Use this function to generate testdata for the estimator.
+    """
+    L = np.random.uniform(low=.1, high=.9, size=(n,n))/2
+    p = L.diagonal()
+    off_diag = L-np.eye(n)*p
+    I = np.zeros(shape=(t,n),dtype=bool)
+    for i in range(1,t):
+        I[i-1,:] = I[i-1,:] | (np.random.uniform(size = (1,n))<.01) # seed random crises
+        q = 1-np.exp(np.dot(I[i-1,:],np.log(1-off_diag)))   
+        I[i,:] = (I[i-1,:] | ((~I[i-1,:]) & (np.random.uniform(size=n)<q)))&(np.random.uniform(size=n)>p)
+    if without_systemic_risk:     
+        return L,I
+    else:
+        return L,np.append(I,np.ones((I.shape[0],1)), axis=1)
+          
+def test_geom_estimator():
+    """
+    Use this function to view the spread of parameter estimates in a simulated model.
+    """
+    pyplot.clf()
+    I = np.random.uniform(size=(256,10000,8))<np.arange(.1,.9,.1)
+    i = np.sum(I[:-1,:,:] & ~I[1:,:,:], axis=0) / np.sum(I, axis=0)
+    p_ = np.mean(i,axis=0)
+    for idx in range(i.shape[1]):
+        pyplot.hist(i[:,idx], normed=True, bins = 20, alpha=.5)
+    pyplot.show()
+    return p_
+
 
 class epidemicModel(object):
     
-    def __init__(self,I,window_size):
+    def __init__(self,I):
         # initialize the class variables
+        self.I = np.array(I,dtype=bool)
+        self.p = np.sum(self.I[:-1,:] & ~self.I[1:,:], axis=0) / np.sum(I, axis=0) # number of streak ends / total length of streaks
         self.T,self.N = I.shape
-        self.I = np.array(I).astype(np.bool)
-        self.window_size = window_size
-        self.shape = (self.T-self.window_size,self.N,self.N)
-        self.likelihoods = np.ones(self.shape[0])*1e-6
+        self.I = np.array(I,dtype=bool)
+        self.likelihood = -1e16
+        self.current = np.random.uniform(size=(self.N,self.N))*(1-np.eye(self.N))
     
-    def optimize(self,starting_value,n_iter,info):
-        counter = 1
-        current = starting_value.copy()
-        m1 = current.copy()
-        m2 = np.power(current,2)
-        while (counter < n_iter):
-            counter += 1
-            if not counter % 100:
-                print(counter)
-            # sample a new datapoint
-            self.metropolis_hastings_sampler(current)
-            # update the 1st and 2nd moment and the variance
-            m1 += current
-            m2 += np.power(current,2)
-            
-        return np.array([m1/counter, m2/counter-np.power(m1/counter,2)])
+    def optimize(self,n_iter):
+        # initialize the optimalization   
+        print('Started optimization')
+        m1 = self.current.copy()
+        m2 = np.power(self.current,2)
+        # loop n_iter times
+        for counter in range(int(n_iter)):
+            if not counter % 10000:
+                print('%.0e'%counter)
+            self.draw_next_MH_sample()
+            m1 += self.current
+            m2 += np.power(self.current,2)           
+        return np.array([self.p*np.eye(self.N)+m1/counter, m2/counter-np.power(m1/counter,2)])#np.array([m1/counter, m2/counter-np.power(m1/counter,2)])
            
-    def metropolis_hastings_sampler(self,current):
-        """
-        In the current implementation the estimates will be correlated through 
-        time. To decrease this correlation, the calculation of new proposals 
-        and acceptance rates should be moved inside the loop. This is comput-
-        ationally expensive however, and possibly the reverse of what we want.
-        """
-        # propose a new point based on the current point: exponential with mean [current]
-        proposal = np.random.uniform(0,1,size=self.shape)
-        # the acceptance rate of the metropolis sampler for this iteration
-        acceptance_rate = np.random.uniform()
-        # loop over all windows   
-        p_i = proposal.diagonal(axis1=1,axis2=2)    
-        p_tildes = 1-np.prod(1-proposal, axis = 1)/(1-p_i)        
-        for start in range(1,self.T-self.window_size):
-            a = self.likelihoods[start]
-            b = self.likelihood_per_window(start,p_i[start,:],p_tildes[start,:])
-                
-            # if the proposal should be accepted, update current. else keep current.
-            if b/a > acceptance_rate:
-                current[start,:,:] = proposal[start,:,:]  
-                self.likelihoods[start] = b
+    def draw_next_MH_sample(self):
+        # random proposal, with the diagonal elements equal to 0.
+        off_diag = np.random.uniform(0,1,size=(self.N,self.N))*(1-np.eye(self.N))
+        # 1 - prod(1-p_ij) for all i that are sick and therefore can infect j
+        q = 1-np.exp(np.dot(self.I[:-1,:],np.log(1-off_diag)))        
+        proposal_likelihood =  self.log_likelihood(q)       
+        if proposal_likelihood-self.likelihood > np.log(np.random.uniform()):
+            self.current = off_diag
+            self.likelihood = proposal_likelihood  
         
-    # start may run from 1 to N-window_size
-    def likelihood_per_window(self,start,p_i,p_tildes):
-        likelihood  = np.prod(self.I[start-1:start+self.window_size-1,:] \
-                    * np.repeat(p_i.reshape((1,p_i.size)),self.window_size,axis=0) \
-                    - self.I[start:start+self.window_size,:]) \
-                    * np.prod( ~self.I[start-1:start+self.window_size-1,:] \
-                    * np.repeat(1-p_i.reshape((1,p_i.size)),self.window_size,axis=0) \
-                    * np.repeat(p_tildes.reshape((1,p_tildes.size)),self.window_size,axis=0) \
-                    -  ~self.I[start:start+self.window_size,:])
-        return np.abs(likelihood)
-        
+    def log_likelihood(self,q):
+        ll =  self.I[:-1,:]*(self.p - self.I[1:,:]) + ~self.I[:-1,:]*((1-self.p)*q-~self.I[1:,:])
+        np.place(ll, ll==0, 1) # remove the starters of an epidemic period, which happens with p=0 (because no one is sick)
+        return np.sum(np.log(np.abs( ll )))
+       
         
         
         

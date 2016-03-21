@@ -13,7 +13,7 @@ from ftplib import FTP_TLS
 
 df = pd.read_excel('crisisPerSector.xlsx',index_col=0)
 df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
-n=100
+n=1e7
 nprocs =1
 n_iter = 5e4
 
@@ -25,11 +25,10 @@ def upload(fname):
     ftp.quit()
  
 if __name__ == '__main__':
-    while True:
-        results = doEpidemicModel(df,n,n_iter=n_iter,info=0)
-        fname = 'epidemic model - window %d - iter %d - %f.npy'%(n,n_iter,time.time())
-        np.save(fname, results)
-        try:
-            upload(fname)
-        finally:
-            print('de volgende rondeeeee')
+    results = doEpidemicModel(df,n_iter=n_iter)
+    fname = 'epidemic model - window %d - iter %d - %f.npy'%(n,n_iter,time.time())
+    np.save(fname, results)
+    try:
+        upload(fname)
+    finally:
+        print('de volgende rondeeeee')
