@@ -17,17 +17,8 @@ def doEpidemicModel(crisis_data,n_iter):
     """
     Compute the expectation and variance of the bayes-estimator for the model 
     specified in our paper. The posterior distribution is sampled using a 
-    Metropolis MCMC that works through all windows simultaneously. Convergence
-    is determined by the average sample variance of all parameters: if the
-    average drops below precision, iteration is terminated.
-    
-    # LW nu gebeurd dit niet toch? Momenteel gaat het aantal iteraties af welke 
-    # vooraf aangegeven is. Want wanneer je de variantie dwingt te verlagen 
-    # dwing je ook de m1 (mean) ook te verlagen. Dus je prefereert hierbij een 
-    # geometrische verdeling met een lagere mean boven eentje van een hogere mean
-    # wanneer je op een punt zit waar meerdere verdelingen binnen hun 95% grens 
-    # zitten?
-    
+    Metropolis MCMC, that simulates a fixed number of datapoints.
+        
     Parameters
     ----------
     crisis_data : numpy matrix, array or dataframe
@@ -113,9 +104,7 @@ class epidemicModel(object):
         # initialize the class variables
         self.I = np.array(I,dtype=bool)
         self.p = np.sum(self.I[:-1,:] & ~self.I[1:,:], axis=0) / np.sum(self.I, axis=0) # number of streak ends / total length of streaks
-        self.T,self.N = I.shape
-        self.I = np.array(I,dtype=bool)
-        # LW waarom dit? Dubbel?                     
+        self.T,self.N = I.shape             
         self.likelihood = -1e16
         self.current = np.random.uniform(size=(self.N,self.N))*(1-np.eye(self.N))
     
