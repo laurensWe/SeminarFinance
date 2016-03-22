@@ -5,7 +5,7 @@ Created on Fri Mar 16 15:09:22 2016
 @author: Sebastiaan Vermeulen
 
 """
-from epidemicModel import doEpidemicModel, R0,printout
+from epidemicModel import *
 import numpy as np
 import pandas as pd
 from matplotlib import style,pyplot
