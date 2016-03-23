@@ -12,7 +12,7 @@ import pandas as pd
 import os
 #import itertools
 
-wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\PerSector\\'
+wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\6-Sectors\\Indices-Models\\PerSector\\'
 #import numpy as np
 #Instruments = pd.read_excel(wd+"Instruments.xlsx")
 #Time = pd.read_excel(wd+"TimeRange.xlsx")
@@ -74,7 +74,7 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 #%% Section for calculation the In-degree interconnectedness
 #initialisation
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
-threshold = 0.01
+threshold = 0.02
 
 
 #Calculate the in degree interconnectedness for each sector for each quarter
