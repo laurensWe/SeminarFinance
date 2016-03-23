@@ -29,6 +29,11 @@ a = pd.DataFrame(dataframes)
 instruments = pd.read_excel(wd + "_Instruments.xlsx")
 filesToTake = pd.read_excel(wd + "_FilesToTake.xlsx")
 sectors = pd.read_excel(wd + "_Sectors.xlsx")
+
+#%% 
+#second calculate all the shares 
+    assetNames = filesToTake['Assets.xlsx']
+    shareName = filesToTake['Shares.xlsx']
         
 #%% 
 horizontalTuples = []
@@ -48,9 +53,9 @@ for dates in instruments.index:
     for ints in instruments:
         Shares = []
         Assets = []
-        for sharefile in filesToTake['Shares']:
+        for sharefile in filesToTake['Shares.xlsx']:
             Shares.append(a[sharefile][ints][dates])
-        for assetfile in filesToTake['Assets']:    
+        for assetfile in filesToTake['Assets.xlsx']:    
             Assets.append(a[assetfile][ints][dates])    
         
         simpleMatrix = pd.DataFrame(index=sectors.columns, columns=sectors.columns)
