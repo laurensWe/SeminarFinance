@@ -3,7 +3,6 @@
 Created on Fri Mar 11 14:50:22 2016
 
 @author: Sebastiaan Vermeulen
-#Comments made by Laurens Weijs *please have a look a them. 
 
 """
 # preamble
