@@ -12,7 +12,7 @@ import pandas as pd
 import os
 #import itertools
 
-wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\PerSector\\'
+wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\6-Sectors\\Indices-Models\\PerSector\\'
 #import numpy as np
 #Instruments = pd.read_excel(wd+"Instruments.xlsx")
 #Time = pd.read_excel(wd+"TimeRange.xlsx")
@@ -29,6 +29,11 @@ a = pd.DataFrame(dataframes)
 instruments = pd.read_excel(wd + "_Instruments.xlsx")
 filesToTake = pd.read_excel(wd + "_FilesToTake.xlsx")
 sectors = pd.read_excel(wd + "_Sectors.xlsx")
+
+#%% 
+#second calculate all the shares 
+    assetNames = filesToTake['Assets.xlsx']
+    shareName = filesToTake['Shares.xlsx']
         
 #%% 
 horizontalTuples = []
@@ -48,9 +53,9 @@ for dates in instruments.index:
     for ints in instruments:
         Shares = []
         Assets = []
-        for sharefile in filesToTake['Shares']:
+        for sharefile in filesToTake['Shares.xlsx']:
             Shares.append(a[sharefile][ints][dates])
-        for assetfile in filesToTake['Assets']:    
+        for assetfile in filesToTake['Assets.xlsx']:    
             Assets.append(a[assetfile][ints][dates])    
         
         simpleMatrix = pd.DataFrame(index=sectors.columns, columns=sectors.columns)
@@ -74,7 +79,7 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 #%% Section for calculation the In-degree interconnectedness
 #initialisation
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
-threshold = 0.01
+threshold = 0.02
 
 
 #Calculate the in degree interconnectedness for each sector for each quarter
