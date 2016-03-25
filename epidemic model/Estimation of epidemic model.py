@@ -18,6 +18,7 @@ df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
 arr = np.array(df)
 nprocs =1
 n_iter = 1e7
+window_size = 100
 
 def upload(fname):
     ftp = FTP_TLS('ftp.servage.net', '3zesp91tTNBV8', 'sbI3cEyWY6pMy8')
@@ -30,15 +31,10 @@ def doe_iets(df,window_size, period,n_iter):
     results = doEpidemicModel(df,n_iter=n_iter)
     fname = 'epidemic model - windowsize %d - period %d - iter %d - %f.npy'%(window_size,period,n_iter,time.time())
     np.save(fname, results)
-    try:
-        upload(fname)
-    finally:
-        print('done')
     
 if __name__ == '__main__':
-    for window_size in np.arange(50,90,20):
-        for i in range(len(df)-window_size):
-	        doe_iets(df.iloc[i:i+window_size+1,:],window_size,i,n_iter)
+    for i in np.arange(len(df)-window_size,0,-1):
+        doe_iets(df.iloc[i:i+window_size+1,:],window_size,i,n_iter)
 
 if False:			
     # doe dit of voer zelf doe_iets een keertje uit
