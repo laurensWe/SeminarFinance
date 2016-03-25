@@ -5,22 +5,24 @@ import epidemicModel
 style.use('ggplot')
 
 def read_all():
-    x = []
-    counts = []
+    x = {}
+    names = []
     for dirpath, dirnames, filenames in os.walk(os.curdir):
         for filename in filenames:
             if os.path.splitext(filename)[1] == '.npy':
-                x.append(np.load(os.path.join(dirpath,filename)))
-                counts.append(int(filename.split(' - ')[2].split(' ')[1]))
+                attrs = filename.split(' - ')
+                if attrs[1]=='windowsize 50':
+                    x[int(attrs[2].split(' ')[1])] = np.load(os.path.join(dirpath,filename))
+                    names.append(filename)
     
-    x = np.array(x)
-    total = np.sum(counts)
-    mean = np.sum(x[:,0,:,:,:]*np.array(counts).reshape((len(counts),1,1,1)),axis=0)/total
-    var = np.sum(x[:,1,:,:,:]*np.array(counts).reshape((len(counts),1,1,1))**2,axis=0)/total**2
-    delta = epidemicModel.precision(var, n_iter=total)
+    x = np.array([val[1] for val in x.items()])
+    mean = x[:,0,:,:]
+    var  = x[:,1,:,:]
     r = epidemicModel.R0(mean)    
-    return mean,var,delta,r,total,x[-1]
+    return mean,var,r,names
     
 
 if __name__ == '__main__':
-    mean,var,delta,r,total,laatste = read_all()
+    mean,var,r,names = read_all()   
+    plt.plot(r)
+    x=mean.diagonal(axis1=1,axis2=2)
