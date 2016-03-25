@@ -26,9 +26,9 @@ def upload(fname):
     print('storing complete. closing connection')
     ftp.quit()
 
-def doe_iets(df,n_iter):
+def doe_iets(df,window_size, period,n_iter):
     results = doEpidemicModel(df,n_iter=n_iter)
-    fname = 'epidemic model - window %d - iter %d - %f.npy'%(n,n_iter,time.time())
+    fname = 'epidemic model - windowsize %d - period %d - iter %d - %f.npy'%(window_size,period,n_iter,time.time())
     np.save(fname, results)
     try:
         upload(fname)
@@ -36,9 +36,9 @@ def doe_iets(df,n_iter):
         print('done')
     
 if __name__ == '__main__':
-    for window_size in np.arange(50,100,10):
-        for i in range(df.length-window_size):
-	        doe_iets(df.loc[i:i+window_size+1,:],n_iter)
+    for window_size in np.arange(50,90,20):
+        for i in range(len(df)-window_size):
+	        doe_iets(df.iloc[i:i+window_size+1,:],window_size,i,n_iter)
 
 if False:			
     # doe dit of voer zelf doe_iets een keertje uit
