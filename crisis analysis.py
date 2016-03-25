@@ -14,11 +14,17 @@ import statsmodels.tsa.api as tsa
 
 
 dfx = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)
-dfy = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)
+dfy = pd.read_excel('leverages.xlsx',index_col=0)
 dfz = pd.read_excel('stability series.xlsx',index_col=0)
-dfx.index = dfy.index = dfz.index = pd.date_range(start='31-6-1969', end='30-09-2015', freq='Q')
+dfx.index = dfy.index = dfz.index = pd.date_range(start='1969-09-30', end='30-09-2015', freq='Q')
+
+sm.OLS(dfy,sm.add_constant(dfx)).fit().summary()
+
+sm.Logit(dfy[col],dfx).fit().summary()
+
 
 for col in dfy.columns:
+    
     print(sm.OLS(dfy[col],dfx).fit().summary())
     print(sm.Logit(dfy[col],dfx).fit().summary())
 print(tsa.VAR(endog = dfx.merge(pd.DataFrame(dfy['GDP_Growth_Rate']),left_index=True,right_index=True)  ).fit(1).summary())
@@ -27,3 +33,5 @@ print(tsa.VAR(endog = dfx.merge(pd.DataFrame(dfy['GDP_Growth_Rate']),left_index=
     
     
 dfx.merge(pd.DataFrame(dfy['GDP_Growth_Rate']),left_index=True,right_index=True)
+
+sm.s
