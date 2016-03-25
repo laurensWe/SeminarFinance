@@ -1,23 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Mar 13 21:32:15 2016
+Created on Wed Mar 23 11:28:52 2016
 
-@author: laure
+@author: Beert
 """
 
-# Script for making three dimensional yield curves per instrument.
-
-# intialize packages
 import pandas as pd
 import os
-#import itertools
 
-wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\6-Sectors\\Indices-Models\\PerSector\\'
-#import numpy as np
-#Instruments = pd.read_excel(wd+"Instruments.xlsx")
-#Time = pd.read_excel(wd+"TimeRange.xlsx")
+wd = 'C:\\Users\\Beert\\Documents\\EUR\\2016\\Seminar\\Python\\Instruments2\\Instruments\\'
+
 #%%
-# first read all the asset-shares and assets per instrument for all sectors
 dataframes = {}
 for dirpath,dirnames,filenames in os.walk(wd):
     for filename in filenames:
@@ -30,25 +23,36 @@ instruments = pd.read_excel(wd + "_Instruments.xlsx")
 filesToTake = pd.read_excel(wd + "_FilesToTake.xlsx")
 sectors = pd.read_excel(wd + "_Sectors.xlsx")
 
-#%% 
-#second calculate all the shares 
-    assetNames = filesToTake['Assets.xlsx']
-    shareName = filesToTake['Shares.xlsx']
-        
-#%% 
+#%%
+assetNames = filesToTake['Assets.xlsx']
+
+#%%
 horizontalTuples = []
 verticalTuples = []
 for ints in instruments.columns:
     for sec in sectors.columns:
         horizontalTuples.append((ints,sec))
-                
+
 for dates in instruments.index:
-    for sec in sectors.columns:   
-        verticalTuples.append((dates,sec))        
-        
-#df = pd.DataFrame(columns=instruments.columns, index=instruments.index)
+    for sec in sectors.columns:
+        verticalTuples.append((dates,sec))
+
+Total = pd.DataFrame(0, index=instruments.index, columns=instruments.columns)
+for assetfile in filesToTake['Assets.xlsx']:
+    Total = Total + pd.read_excel(wd+assetfile, index_col = 0)
+
+for i in range(Total.shape[0]):
+    for j in range(Total.shape[1]):
+        if Total.iloc[i,j] == 0:
+            Total.iloc[i,j] = float('Inf')
+
+for i in filesToTake.index:
+    zero = pd.DataFrame(0, index=instruments.index, columns=instruments.columns)
+    asset = zero + pd.read_excel(wd+filesToTake['Assets.xlsx'].iloc[i], index_col = 0)
+    share = asset / Total
+    share.to_excel(wd+filesToTake['Shares.xlsx'].iloc[i])
+
 df = pd.DataFrame(index=verticalTuples,columns=horizontalTuples)
-#df = pd.DataFrame()
 for dates in instruments.index:    
     for ints in instruments:
         Shares = []
@@ -61,28 +65,19 @@ for dates in instruments.index:
         simpleMatrix = pd.DataFrame(index=sectors.columns, columns=sectors.columns)
         for share in range(len(Shares)):
             for asset in range(len(Assets)):
-                #print('x: ' + str(asset) +',y: ' + str(share)+ ":" + str(Shares[share]*Assets[asset]))
                 simpleMatrix.iloc[share, asset] = Shares[share]*Assets[asset]
         for sec1 in sectors.columns:
             for sec2 in sectors.columns:
                 df.loc[(dates, sec1), (ints,sec2)] = simpleMatrix.loc[sec1,sec2]
-                #df.join(dftemp, how='inner')                
-                #df.loc[(ints,sec1),(dates,sec2) = simpleMatrix.loc[sec1,sec2]
-                #df.loc[dates,ints] = simpleMatrix.to_dict()
-                
-#itertools.combinations(instruments.columns,sectors.columns) 
-#list(zip(instruments.columns,sectors.columns))  
+
 mic = pd.MultiIndex.from_tuples(tuples=df.columns, names=['instrument','sector'])
 mii = pd.MultiIndex.from_tuples(tuples=df.index, names=['date','sector'])
 df2 = pd.DataFrame(df,index=mii,columns=mic)
 
-#%% Section for calculation the In-degree interconnectedness
-#initialisation
+#%%
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
-threshold = 0.02
+threshold = 0.001
 
-
-#Calculate the in degree interconnectedness for each sector for each quarter
 for dates in instruments.index:
     tempDate = df2.loc[dates].transpose().sum(level=[1])
     totals = tempDate.sum()
@@ -96,14 +91,12 @@ for dates in instruments.index:
 
 systemInDegree = pd.DataFrame(columns=['SystemInDegree'],index=instruments.index)
 
-#System In-Degree Interconnectedness
 for dates in instruments.index:
     systemInDegree.loc[dates,'SystemInDegree'] = inDegree.loc[dates].sum() / amountSec
-    
 
+inDegree.to_excel(wd+'InDegree001.xlsx')
 
-#%% Section for calculation of the Herfindahl-Hirschman Index
-#initialisation
+#%%
 hhiIndices = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 
 for dates in instruments.index:
@@ -119,13 +112,9 @@ for dates in instruments.index:
 
 systemHHI = pd.DataFrame(columns=['SystemHHI'],index=instruments.index)
 
-#System H-H Index
 for dates in instruments.index:
     systemHHI.loc[dates,'SystemHHI'] = hhiIndices.loc[dates].sum() / amountSec
 
-#%%Write away to Excel files
-
-systemInDegree.to_excel("sytemInDegree.xlsx")
-systemHHI.to_excel("systemHHI.xlsx")
-                
-    
+#%%
+inDegree.to_excel(wd+'InDegree10.xlsx')
+hhiIndices.to_excel(wd+'HHI.xlsx')
