@@ -33,7 +33,7 @@ def doe_iets(df,window_size, period,n_iter):
     np.save(fname, results)
     
 if __name__ == '__main__':
-    for i in np.arange(len(df)-window_size,0,-1):
+    for i in [24,34]:#np.arange(122,145):
         doe_iets(df.iloc[i:i+window_size+1,:],window_size,i,n_iter)
 
 if False:			
