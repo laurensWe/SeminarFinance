@@ -1,26 +1,37 @@
 import os
 import numpy as np
+import pandas as pd
 from matplotlib import style,pyplot as plt
 import epidemicModel
 style.use('ggplot')
 
+df = pd.read_excel('crisisPerSector.xlsx',index_col=0,converters={i:bool for i in range(1,7)})
+df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
+
 def read_all():
-    x = []
-    counts = []
+    x = {}
+    names = []
     for dirpath, dirnames, filenames in os.walk(os.curdir):
         for filename in filenames:
             if os.path.splitext(filename)[1] == '.npy':
-                x.append(np.load(os.path.join(dirpath,filename)))
-                counts.append(int(filename.split(' - ')[2].split(' ')[1]))
+                attrs = filename.split(' - ')
+                if attrs[1]=='windowsize 100':
+                    x[int(attrs[2].split(' ')[1])] = np.load(os.path.join(dirpath,filename))
+                    names.append(filename)
     
-    x = np.array(x)
-    total = np.sum(counts)
-    mean = np.sum(x[:,0,:,:,:]*np.array(counts).reshape((len(counts),1,1,1)),axis=0)/total
-    var = np.sum(x[:,1,:,:,:]*np.array(counts).reshape((len(counts),1,1,1))**2,axis=0)/total**2
-    delta = epidemicModel.precision(var, n_iter=total)
+    y = np.zeros((2,156,6,6))
+    for key in x.keys():
+        y[:,key,:,:] = x[key]
+    x = y
+    mean = x[0,:,:,:]
+    var  = x[1,:,:,:]
     r = epidemicModel.R0(mean)    
-    return mean,var,delta,r,total,x[-1]
+    return mean,var,r,names
     
 
 if __name__ == '__main__':
-    mean,var,delta,r,total,laatste = read_all()
+    mean,var,r,names = read_all() 
+    r = pd.DataFrame(data=r, index=df.index[99:], columns = df.columns)
+    ax = plt.subplot()
+    r.plot(ax=ax)
+    plt.title('$R_0$ development through time')
