@@ -7,31 +7,32 @@ Created on Fri Mar 25 11:36:01 2016
 
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot
 import statsmodels.formula.api as sf
 import statsmodels.api as sm
 import statsmodels.tsa.api as tsa
-
-
 
 dfx = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)
 dfy = pd.read_excel('leverages.xlsx',index_col=0)
 dfz = pd.read_excel('stability series.xlsx',index_col=0)
 dfx.index = dfy.index = dfz.index = pd.date_range(start='1969-09-30', end='30-09-2015', freq='Q')
 
-sm.OLS(dfy,sm.add_constant(dfx)).fit().summary()
+IV = sm.OLS(dfy,dfx).fit().fittedvalues
 
-sm.Logit(dfy[col],dfx).fit().summary()
+IV.corr()
+dfy.corr()
 
+estims = {}
+estims['NBER_RECESSIONS'] = {'lev':sm.Logit(dfz['NBER_RECESSIONS'], sm.add_constant(dfy)).fit(), 'iv':sm.Logit(dfz['NBER_RECESSIONS'], sm.add_constant(IV)).fit()}
+estims['GDP_Growth_Rate'] = {'lev':sm.OLS(dfz['GDP_Growth_Rate'], sm.add_constant(dfy)).fit(), 'iv':sm.OLS(dfz['GDP_Growth_Rate'], sm.add_constant(IV)).fit()}
 
-for col in dfy.columns:
-    
-    print(sm.OLS(dfy[col],dfx).fit().summary())
-    print(sm.Logit(dfy[col],dfx).fit().summary())
-print(tsa.VAR(endog = dfx.merge(pd.DataFrame(dfy['GDP_Growth_Rate']),left_index=True,right_index=True)  ).fit(1).summary())
-#    sf.ols(formula = '{} ~ {}'.format(col,'+'.join(dfx.columns) ), data = dfx.merge(dfy[col],left_index=True,right_index=True) ).fit().summary()
-    
-    
-    
-dfx.merge(pd.DataFrame(dfy['GDP_Growth_Rate']),left_index=True,right_index=True)
+ax = pyplot.subplot()
 
-sm.s
+for key in estims.keys():  
+    ax = pyplot.plot(dfz[key])
+    pyplot.title(key)
+    for subkey in estims[key].keys():
+        pyplot.plot(estims[key][subkey].fittedvalues, axes = ax,label = key)
+    pyplot.legend(axes = ax)
+    pyplot.show(axes = ax)
+    pyplot.text

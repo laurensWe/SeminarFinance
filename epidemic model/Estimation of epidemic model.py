@@ -18,7 +18,7 @@ df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
 arr = np.array(df)
 nprocs =1
 n_iter = 1e7
-window_size = 100
+window_size = 70
 
 def upload(fname):
     ftp = FTP_TLS('ftp.servage.net', '3zesp91tTNBV8', 'sbI3cEyWY6pMy8')
@@ -33,7 +33,7 @@ def doe_iets(df,window_size, period,n_iter):
     np.save(fname, results)
     
 if __name__ == '__main__':
-    for i in [24,34]:#np.arange(122,145):
+    for i in np.arange(50,74):
         doe_iets(df.iloc[i:i+window_size+1,:],window_size,i,n_iter)
 
 if False:			
