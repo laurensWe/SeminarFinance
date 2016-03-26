@@ -33,7 +33,15 @@ def doe_iets(df,window_size, period,n_iter):
     np.save(fname, results)
     
 if __name__ == '__main__':
+<<<<<<< HEAD
     for i in np.arange(6,25):
+=======
+<<<<<<< HEAD
+    for i in np.arange(70,len(df)-window_size):
+=======
+    for i in np.arange(50,74):
+>>>>>>> cbb593f92cb28b77a8801abfd6a0c6d7e2d79015
+>>>>>>> 6ae1d0544533407372191814861a59954ef0ce45
         doe_iets(df.iloc[i:i+window_size+1,:],window_size,i,n_iter)
 
 if False:			
