@@ -15,7 +15,6 @@ style.use('ggplot')
 
 df = pd.read_excel('crisisPerSector.xlsx',index_col=0,converters={i:bool for i in range(1,7)})
 df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
-arr = np.array(df)
 nprocs =1
 n_iter = 1e7
 window_size = 70
@@ -41,8 +40,3 @@ if False:
     results = np.load('epidemic model - window 1 - iter 10000000 - 1458583174.812032.npy')
     R0(results[0,:,:])
     printout(results[1,:,:])
-    np.sum(arr[:-1,:] & ~arr[1:,:], axis=0) # number of crises
-    np.sum(~arr[:-1,:].any(axis=1) & arr[1:,:].T, axis=1) # number of crisis starts
-    np.sum(df, axis=0) # number of quarters in crisis
-    np.sum(df, axis=0)/255 # % of quarters in crisis
-    ax = df.sum(axis=1).plot(kind='area')    

@@ -9,7 +9,7 @@ import pandas as pd
 from matplotlib import style,pyplot as plt
 from pandas.tools.plotting import autocorrelation_plot
 style.use('ggplot')
-ws = 70
+ws = 100
 
 def diff(df,order=1):
     def frstdiff(df):
@@ -24,9 +24,21 @@ df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
 
 mean = np.load('mean for windowsize '+str(ws)+'.npy')
 var = np.load('variance for windowsize '+str(ws)+'.npy')
-m = pd.read_excel('R0 for windowsize '+str(ws)+'.xlsx')   
-r = pd.read_excel('mean for windowsize '+str(ws)+'.xlsx')
-v = pd.to_excel('variance for windowsize '+str(ws)+'.xlsx')
+r = pd.read_excel('R0 for windowsize '+str(ws)+'.xlsx')   
+m = pd.read_excel('mean for windowsize '+str(ws)+'.xlsx',header=[0,1])
+v = pd.read_excel('variance for windowsize '+str(ws)+'.xlsx',header=[0,1])
+
+#%% STATISTICS %%
+
+arr = np.array(df)
+np.sum(arr[:-1,:] & ~arr[1:,:], axis=0) # number of crises
+np.sum(~arr[:-1,:].any(axis=1) & arr[1:,:].T, axis=1) # number of crisis starts
+np.sum(df, axis=0) # number of quarters in crisis
+np.sum(df, axis=0)/255 # % of quarters in crisis
+
+r.corr()
+
+#%% VISUALS %%
 
 plt.clf()
 ax = plt.subplot()
@@ -37,10 +49,11 @@ plt.savefig(name)
 
 plt.clf()
 ax = plt.subplot()
+m.boxplot(ax=ax, rot=90)
 name = 'Spread of estimated parameters $p_ij$ for windowsize '+str(ws)
+plt.autoscale(tight=True)
 plt.title(name)
 plt.savefig(name)
-m.boxplot(ax=ax, rot=90)
 
 plt.clf()
 ax = plt.subplot()
@@ -67,8 +80,7 @@ for i in range(6):
 name = 'Autocorrelation plot of the 1st diffs of $R_0$ for window size '+str(ws)
 plt.title(name)
 plt.savefig(name)
- 
-r.corr()
+
 
 for i in range(6):
     col = df.columns[i]
@@ -80,22 +92,34 @@ for i in range(6):
     ax.fill_between(df.index,df.iloc[:,0], alpha=.4, step = 'pre')
     line1, label1 = ax.get_legend_handles_labels()
     line2, label2 = ax2.get_legend_handles_labels()
-    ax2.legend(handles = line1+line2, labels = label1+label2)        
-    
-    plt.title('$p_{{{}}}$ and $R_0({})$, with crises periods shaded'.format(col,col))
-    plt.savefig('rate of getting better and R0 and crises for {}.png'.format(col))
+    ax2.legend(handles = line1+line2, labels = label1+label2)     
+    name = '$p_{{{}}}$ and $R_0({})$, with crises periods shaded. window {}'.format(col,col, ws)
+    plt.title(name)
+    plt.savefig(name+'.png')
 
-
+# outgoing effect 
 for i in range(6):
     plt.clf()
     ax = plt.subplot()
-    name = 'Rates of infectiousness of {}'.format(df.columns[i])
+    name = 'Rates of infectiousness of {} at window {}'.format(df.columns[i],ws)
     ax.plot(m.index,mean[:,i,np.array([ i!=j for j in range(6)])])
     ax.fill_between(df.index,df.iloc[:,i], alpha=.4, step = 'pre')
+    ax.set_xlim(m.index[0].toordinal(), m.index[-1].toordinal())
     plt.title(name)
     plt.legend(labels=df.columns)
     plt.savefig(name+'.png')
-    
+ 
+#incoming effect
+for i in range(6):
+    plt.clf()
+    ax = plt.subplot()
+    name = 'Rates of susceptibility of {} at window {}'.format(df.columns[i],ws)
+    ax.fill_between(df.index,df.iloc[:,i], alpha=.4, step = 'pre')
+    ax.plot(m.index,mean[:,np.array([ i!=j for j in range(6)]),i])
+    ax.set_xlim(m.index[0].toordinal(), m.index[-1].toordinal())
+    plt.title(name)
+    plt.legend(labels=df.columns)
+    plt.savefig(name+'.png')   
 
 plt.cla()
 ax = plt.subplot()
