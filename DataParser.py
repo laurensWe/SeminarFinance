@@ -2,13 +2,14 @@
 """
 Created on Wed Mar 23 11:28:52 2016
 
-@author: Beert
+@author: Laurens duhh!!!
+En een beetje van Beert
 """
 
 import pandas as pd
 import os
 
-wd = 'C:\\Users\\Beert\\Documents\\EUR\\2016\\Seminar\\Python\\Instruments2\\Instruments\\'
+wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\6-Sectors\\Indices-Models\\PerSector\\'
 
 #%%
 dataframes = {}
@@ -76,7 +77,7 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 
 #%%
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
-threshold = 0.001
+threshold = 0.02
 
 for dates in instruments.index:
     tempDate = df2.loc[dates].transpose().sum(level=[1])
@@ -118,3 +119,5 @@ for dates in instruments.index:
 #%%
 inDegree.to_excel(wd+'InDegree10.xlsx')
 hhiIndices.to_excel(wd+'HHI.xlsx')
+
+systemInDegree.to_excel(wd+'sysID2.xlsx')
