@@ -1,0 +1,92 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        GDP Growth Rate   R-squared:                       0.337
+Model:                            OLS   Adj. R-squared:                  0.326
+Method:                 Least Squares   F-statistic:                     30.73
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           4.19e-16
+Time:                        14:12:04   Log-Likelihood:                -221.78
+No. Observations:                 185   AIC:                             451.6
+Df Residuals:                     181   BIC:                             464.4
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          1.5751      0.060     26.409      0.000         1.457     1.693
+y1_IV          0.4589      0.050      9.252      0.000         0.361     0.557
+y2_IV         -0.0797      0.095     -0.837      0.404        -0.268     0.108
+y3_IV         -0.5335      0.343     -1.557      0.121        -1.210     0.143
+==============================================================================
+Omnibus:                       18.756   Durbin-Watson:                   1.553
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               60.146
+Skew:                           0.254   Prob(JB):                     8.70e-14
+Kurtosis:                       5.747   Cond. No.                         6.97
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        GDP Growth Rate   R-squared:                       0.348
+Model:                            OLS   Adj. R-squared:                  0.326
+Method:                 Least Squares   F-statistic:                     15.85
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.46e-14
+Time:                        14:12:04   Log-Likelihood:                -220.25
+No. Observations:                 185   AIC:                             454.5
+Df Residuals:                     178   BIC:                             477.0
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          1.5748      0.060     26.401      0.000         1.457     1.692
+y1_IV          0.4589      0.050      9.251      0.000         0.361     0.557
+y2_IV         -0.0797      0.095     -0.837      0.404        -0.268     0.108
+y3_IV         -0.5335      0.343     -1.557      0.121        -1.210     0.143
+y1_resid       0.2953      0.260      1.137      0.257        -0.217     0.808
+y2_resid       0.1914      0.177      1.082      0.281        -0.158     0.540
+y3_resid       0.1174      0.420      0.280      0.780        -0.710     0.945
+==============================================================================
+Omnibus:                       20.841   Durbin-Watson:                   1.585
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               69.953
+Skew:                           0.306   Prob(JB):                     6.46e-16
+Kurtosis:                       5.950   Cond. No.                         9.32
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        GDP Growth Rate   R-squared:                       0.383
+Model:                            OLS   Adj. R-squared:                  0.355
+Method:                 Least Squares   F-statistic:                     13.68
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           2.41e-15
+Time:                        14:12:04   Log-Likelihood:                -215.13
+No. Observations:                 185   AIC:                             448.3
+Df Residuals:                     176   BIC:                             477.2
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          1.1343      0.153      7.391      0.000         0.831     1.437
+y1_IV          0.3375      0.062      5.431      0.000         0.215     0.460
+y2_IV         -0.0379      0.094     -0.402      0.688        -0.224     0.148
+y3_IV         -0.3121      0.345     -0.905      0.367        -0.993     0.368
+y1_resid       0.2165      0.256      0.847      0.398        -0.288     0.721
+y2_resid       0.1432      0.174      0.825      0.411        -0.199     0.486
+y3_resid       0.1082      0.410      0.264      0.792        -0.702     0.918
+lag_0          0.1785      0.074      2.420      0.017         0.033     0.324
+lag_1          0.1025      0.073      1.402      0.163        -0.042     0.247
+==============================================================================
+Omnibus:                       26.813   Durbin-Watson:                   1.984
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              101.746
+Skew:                           0.433   Prob(JB):                     8.06e-23
+Kurtosis:                       6.529   Cond. No.                         20.8
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+(3.0524147020087185, 0.38361424864266014)
+<F test: F=array([[ 0.98709354]]), p=0.40016153442507296, df_denom=178, df_num=3>
+<F test: F=array([[ 0.588925]]), p=0.6230316772231962, df_denom=176, df_num=3>

@@ -1,0 +1,92 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        NBER RECESSIONS   R-squared:                       0.048
+Model:                            OLS   Adj. R-squared:                  0.033
+Method:                 Least Squares   F-statistic:                     3.068
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):             0.0293
+Time:                        14:12:04   Log-Likelihood:                -82.437
+No. Observations:                 185   AIC:                             172.9
+Df Residuals:                     181   BIC:                             185.8
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.1838      0.028      6.545      0.000         0.128     0.239
+y1_IV          0.0362      0.023      1.550      0.123        -0.010     0.082
+y2_IV          0.0993      0.045      2.214      0.028         0.011     0.188
+y3_IV         -0.1406      0.161     -0.871      0.385        -0.459     0.178
+==============================================================================
+Omnibus:                       45.627   Durbin-Watson:                   0.538
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               71.948
+Skew:                           1.502   Prob(JB):                     2.38e-16
+Kurtosis:                       3.560   Cond. No.                         6.97
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        NBER RECESSIONS   R-squared:                       0.253
+Model:                            OLS   Adj. R-squared:                  0.228
+Method:                 Least Squares   F-statistic:                     10.07
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.43e-09
+Time:                        14:12:04   Log-Likelihood:                -60.000
+No. Observations:                 185   AIC:                             134.0
+Df Residuals:                     178   BIC:                             156.5
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.1840      0.025      7.337      0.000         0.135     0.234
+y1_IV          0.0362      0.021      1.735      0.084        -0.005     0.077
+y2_IV          0.0993      0.040      2.478      0.014         0.020     0.178
+y3_IV         -0.1406      0.144     -0.975      0.331        -0.425     0.144
+y1_resid       0.1910      0.109      1.748      0.082        -0.025     0.407
+y2_resid      -0.0055      0.074     -0.074      0.941        -0.152     0.141
+y3_resid      -1.1237      0.176     -6.370      0.000        -1.472    -0.776
+==============================================================================
+Omnibus:                       29.392   Durbin-Watson:                   0.771
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               37.905
+Skew:                           1.069   Prob(JB):                     5.88e-09
+Kurtosis:                       3.587   Cond. No.                         9.32
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        NBER RECESSIONS   R-squared:                       0.606
+Model:                            OLS   Adj. R-squared:                  0.588
+Method:                 Least Squares   F-statistic:                     33.81
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           7.27e-32
+Time:                        14:12:04   Log-Likelihood:               -0.91006
+No. Observations:                 185   AIC:                             19.82
+Df Residuals:                     176   BIC:                             48.80
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.0696      0.021      3.263      0.001         0.028     0.112
+y1_IV          0.0182      0.015      1.188      0.237        -0.012     0.048
+y2_IV          0.0194      0.031      0.635      0.526        -0.041     0.080
+y3_IV         -0.0296      0.106     -0.279      0.780        -0.239     0.180
+y1_resid       0.0440      0.081      0.544      0.587        -0.115     0.203
+y2_resid       0.0366      0.055      0.667      0.506        -0.072     0.145
+y3_resid      -0.4891      0.139     -3.508      0.001        -0.764    -0.214
+lag_0          0.7815      0.074     10.584      0.000         0.636     0.927
+lag_1         -0.1595      0.073     -2.177      0.031        -0.304    -0.015
+==============================================================================
+Omnibus:                       51.856   Durbin-Watson:                   2.094
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              314.401
+Skew:                           0.858   Prob(JB):                     5.36e-69
+Kurtosis:                       9.152   Cond. No.                         10.0
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+(44.874200547185922, 9.8401808923398448e-10)
+<F test: F=array([[ 16.28770338]]), p=2.1306634011025056e-09, df_denom=178, df_num=3>
+<F test: F=array([[ 5.15738083]]), p=0.0019300914494854461, df_denom=176, df_num=3>
