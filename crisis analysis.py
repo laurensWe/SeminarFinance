@@ -23,8 +23,7 @@ def lltest(model0,modelA):
 
 dfx = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)
 dfy = pd.read_excel('leverages.xlsx',index_col=0)
-dfz = pd.read_excel('stability series.xlsx',index_col=0)
-dfx.index = dfy.index = dfz.index = pd.date_range(start='1969-09-30', end='30-09-2015', freq='Q')
+dfz = pd.read_excel('financial stability measures continuous.xlsx',index_col=1).drop('dropme',axis=1)
 
 _,dfy_pca,_,_ = pca(dfy,3)
 f =  sm.OLS(dfy_pca,dfx).fit() 
@@ -44,20 +43,30 @@ estims = {}
 for col in dfz.columns:
     estims[col] = {     'direct':sm.OLS(dfz[col], sm.add_constant(sep)).fit(), 
                         'IV':    sm.OLS(dfz[col], sm.add_constant(IV)).fit(),
-                        'VARX':  sm.OLS(dfz[col], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index)))).fit()}
+                        'VARX-IV':  sm.OLS(dfz[col], sm.add_constant(IV.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index)))).fit(),
+                        'VARX-direct':  sm.OLS(dfz[col], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index)))).fit(),
+                        }
 
 for col in dfz.columns:
     with open(col+'.txt','w') as f:
+        # significantie van parameters
+        print('significance of residuals in regular OLS')
+        print('likelihood ratio:')
+        print(lltest(estims[col]['IV'],estims[col]['direct']), file=f)
+        print('F-test:')
+        print(estims[col]['direct'].f_test(np.array([[0,0,0,0,1,0,0],[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])), file=f)
+        print('significance of residuals in VAR-X')
+        print('likelihood ratio:')
+        print(lltest(estims[col]['VARX-IV'],estims[col]['VARX-direct']), file=f)
+        print('F-test:')
+        print(estims[col]['VARX-direct'].f_test(np.array([[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0,0]])), file=f)
+
         # samenvatting van regressies
         print(estims[col]['IV'].summary(), file=f)
         print(estims[col]['direct'].summary(), file=f)
-        print(estims[col]['VARX'].summary(), file=f)
+        print(estims[col]['VARX-IV'].summary(), file=f)
+        print(estims[col]['VARX-direct'].summary(), file=f)
         
-        # significantie van parameters
-        print(lltest(estims[col]['IV'],estims[col]['direct']), file=f)
-        print(estims[col]['direct'].f_test(np.array([[0,0,0,0,1,0,0],[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])), file=f)
-        print(estims[col]['VARX'].f_test(np.array([[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0,0]])), file=f)
-
 
 #%% VISUALS %%
 if False:
