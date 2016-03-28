@@ -1,0 +1,194 @@
+significance of residuals in regular OLS
+likelihood ratio:
+(16.264954578053448, 0.0010006057236837673)
+F-test:
+<F test: F=array([[ 5.45269287]]), p=0.0013106992108673312, df_denom=178, df_num=3>
+significance of residuals in VAR-X
+likelihood ratio:
+(3.9872642538504124, 0.26284264848826666)
+F-test:
+<F test: F=array([[ 1.27815416]]), p=0.283418786900605, df_denom=176, df_num=3>
+significance of IV in regular OLS
+likelihood ratio:
+(21.551751239224814, 8.0850686373978853e-05)
+F-test:
+<F test: F=array([[ 34.11567986]]), p=1.806087113725053e-17, df_denom=178, df_num=3>
+significance of IV in VAR-X
+likelihood ratio:
+(1.2619153476534848, 0.73819589605023639)
+F-test:
+<F test: F=array([[ 2.9857879]]), p=0.03263531853947685, df_denom=176, df_num=3>
+                                   OLS Regression Results                                  
+===========================================================================================
+Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                       0.102
+Model:                                         OLS   Adj. R-squared:                  0.087
+Method:                              Least Squares   F-statistic:                     6.827
+Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           0.000220
+Time:                                     15:15:59   Log-Likelihood:                -647.50
+No. Observations:                              185   AIC:                             1303.
+Df Residuals:                                  181   BIC:                             1316.
+Df Model:                                        3                                         
+Covariance Type:                         nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          5.2964      0.596      8.892      0.000         4.121     6.472
+y1_IV          1.7137      0.495      3.460      0.001         0.736     2.691
+y2_IV         -2.2126      0.952     -2.325      0.021        -4.091    -0.335
+y3_IV          7.5739      3.422      2.213      0.028         0.822    14.325
+==============================================================================
+Omnibus:                       23.437   Durbin-Watson:                   0.253
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               38.085
+Skew:                          -0.683   Prob(JB):                     5.37e-09
+Kurtosis:                       4.753   Cond. No.                         6.97
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                                   OLS Regression Results                                  
+===========================================================================================
+Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                       0.076
+Model:                                         OLS   Adj. R-squared:                  0.060
+Method:                              Least Squares   F-statistic:                     4.935
+Date:                             Mon, 28 Mar 2016   Prob (F-statistic):            0.00256
+Time:                                     15:15:59   Log-Likelihood:                -650.15
+No. Observations:                              185   AIC:                             1308.
+Df Residuals:                                  181   BIC:                             1321.
+Df Model:                                        3                                         
+Covariance Type:                         nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          5.2869      0.604      8.750      0.000         4.095     6.479
+y1_resid       7.4590      2.631      2.835      0.005         2.267    12.651
+y2_resid       5.4738      1.791      3.056      0.003         1.940     9.008
+y3_resid      -0.8789      4.249     -0.207      0.836        -9.263     7.505
+==============================================================================
+Omnibus:                       61.200   Durbin-Watson:                   0.243
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              181.236
+Skew:                          -1.354   Prob(JB):                     4.42e-40
+Kurtosis:                       7.022   Cond. No.                         7.68
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                                   OLS Regression Results                                  
+===========================================================================================
+Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                       0.177
+Model:                                         OLS   Adj. R-squared:                  0.150
+Method:                              Least Squares   F-statistic:                     6.392
+Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           4.10e-06
+Time:                                     15:15:59   Log-Likelihood:                -639.37
+No. Observations:                              185   AIC:                             1293.
+Df Residuals:                                  178   BIC:                             1315.
+Df Model:                                        6                                         
+Covariance Type:                         nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          5.2892      0.575      9.202      0.000         4.155     6.423
+y1_IV          1.7137      0.478      3.585      0.000         0.770     2.657
+y2_IV         -2.2126      0.918     -2.409      0.017        -4.025    -0.400
+y3_IV          7.5738      3.302      2.294      0.023         1.058    14.090
+y1_resid       7.4590      2.503      2.980      0.003         2.519    12.399
+y2_resid       5.4738      1.704      3.213      0.002         2.112     8.836
+y3_resid      -0.8789      4.042     -0.217      0.828        -8.856     7.098
+==============================================================================
+Omnibus:                       19.301   Durbin-Watson:                   0.288
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               30.574
+Skew:                          -0.580   Prob(JB):                     2.30e-07
+Kurtosis:                       4.618   Cond. No.                         9.32
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                                   OLS Regression Results                                  
+===========================================================================================
+Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                       0.838
+Model:                                         OLS   Adj. R-squared:                  0.833
+Method:                              Least Squares   F-statistic:                     185.0
+Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           9.73e-69
+Time:                                     15:15:59   Log-Likelihood:                -489.14
+No. Observations:                              185   AIC:                             990.3
+Df Residuals:                                  179   BIC:                             1010.
+Df Model:                                        5                                         
+Covariance Type:                         nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.8396      0.307      2.736      0.007         0.234     1.445
+y1_IV          0.1984      0.220      0.903      0.368        -0.235     0.632
+y2_IV         -0.0930      0.414     -0.224      0.823        -0.910     0.724
+y3_IV          0.6623      1.484      0.446      0.656        -2.267     3.591
+lag_0          1.2523      0.069     18.241      0.000         1.117     1.388
+lag_1         -0.4059      0.068     -5.932      0.000        -0.541    -0.271
+==============================================================================
+Omnibus:                       24.393   Durbin-Watson:                   2.083
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              130.204
+Skew:                          -0.109   Prob(JB):                     5.33e-29
+Kurtosis:                       7.104   Cond. No.                         80.5
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                                   OLS Regression Results                                  
+===========================================================================================
+Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                       0.840
+Model:                                         OLS   Adj. R-squared:                  0.836
+Method:                              Least Squares   F-statistic:                     188.3
+Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           2.61e-69
+Time:                                     15:15:59   Log-Likelihood:                -487.78
+No. Observations:                              185   AIC:                             987.6
+Df Residuals:                                  179   BIC:                             1007.
+Df Model:                                        5                                         
+Covariance Type:                         nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.8430      0.301      2.802      0.006         0.249     1.437
+y1_resid       1.2194      1.121      1.088      0.278        -0.992     3.431
+y2_resid       0.7842      0.767      1.022      0.308        -0.730     2.298
+y3_resid       1.0335      1.778      0.581      0.562        -2.475     4.542
+lag_0          1.2371      0.069     17.899      0.000         1.101     1.373
+lag_1         -0.3915      0.068     -5.734      0.000        -0.526    -0.257
+==============================================================================
+Omnibus:                       27.525   Durbin-Watson:                   2.056
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              157.681
+Skew:                          -0.224   Prob(JB):                     5.75e-35
+Kurtosis:                       7.501   Cond. No.                         106.
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                                   OLS Regression Results                                  
+===========================================================================================
+Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                       0.841
+Model:                                         OLS   Adj. R-squared:                  0.834
+Method:                              Least Squares   F-statistic:                     116.6
+Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           3.25e-66
+Time:                                     15:15:59   Log-Likelihood:                -487.15
+No. Observations:                              185   AIC:                             992.3
+Df Residuals:                                  176   BIC:                             1021.
+Df Model:                                        8                                         
+Covariance Type:                         nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.9073      0.309      2.940      0.004         0.298     1.516
+y1_IV          0.2219      0.220      1.011      0.314        -0.211     0.655
+y2_IV         -0.1263      0.414     -0.305      0.760        -0.943     0.690
+y3_IV          0.7708      1.482      0.520      0.604        -2.154     3.696
+y1_resid       1.2998      1.129      1.151      0.251        -0.928     3.528
+y2_resid       0.8360      0.773      1.082      0.281        -0.689     2.361
+y3_resid       1.0036      1.787      0.561      0.575        -2.524     4.531
+lag_0          1.2292      0.070     17.573      0.000         1.091     1.367
+lag_1         -0.3959      0.069     -5.759      0.000        -0.532    -0.260
+==============================================================================
+Omnibus:                       24.231   Durbin-Watson:                   2.068
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              132.767
+Skew:                           0.009   Prob(JB):                     1.48e-29
+Kurtosis:                       7.150   Cond. No.                         106.
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.

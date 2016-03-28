@@ -1,0 +1,194 @@
+significance of residuals in regular OLS
+likelihood ratio:
+(37.615132172620719, 3.4097001888611089e-08)
+F-test:
+<F test: F=array([[ 14.13924839]]), p=1.1118966026669744e-07, df_denom=94, df_num=3>
+significance of residuals in VAR-X
+likelihood ratio:
+(7.5985805192411533, 0.055078871414128927)
+F-test:
+<F test: F=array([[ 2.39025157]]), p=0.07408766991494929, df_denom=88, df_num=3>
+significance of IV in regular OLS
+likelihood ratio:
+(20.172051057100504, 0.00015636078659841957)
+F-test:
+<F test: F=array([[ 3.33837934]]), p=0.022632402855253624, df_denom=94, df_num=3>
+significance of IV in VAR-X
+likelihood ratio:
+(5.3040104028082737, 0.15084237371841103)
+F-test:
+<F test: F=array([[ 1.17177437]]), p=0.32515214293412936, df_denom=88, df_num=3>
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  KCFSI   R-squared:                       0.159
+Model:                            OLS   Adj. R-squared:                  0.133
+Method:                 Least Squares   F-statistic:                     6.120
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           0.000741
+Time:                        15:15:59   Log-Likelihood:                -130.96
+No. Observations:                 101   AIC:                             269.9
+Df Residuals:                      97   BIC:                             280.4
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         -0.2660      0.218     -1.220      0.225        -0.699     0.167
+y1_IV         -0.3553      0.189     -1.879      0.063        -0.731     0.020
+y2_IV         -0.3287      0.166     -1.980      0.051        -0.658     0.001
+y3_IV         -1.6765      0.597     -2.807      0.006        -2.862    -0.491
+==============================================================================
+Omnibus:                       62.952   Durbin-Watson:                   0.398
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              283.135
+Skew:                           2.090   Prob(JB):                     3.30e-62
+Kurtosis:                      10.057   Cond. No.                         9.79
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  KCFSI   R-squared:                       0.293
+Model:                            OLS   Adj. R-squared:                  0.271
+Method:                 Least Squares   F-statistic:                     13.37
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           2.25e-07
+Time:                        15:15:59   Log-Likelihood:                -122.24
+No. Observations:                 101   AIC:                             252.5
+Df Residuals:                      97   BIC:                             262.9
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         -0.0046      0.085     -0.054      0.957        -0.174     0.165
+y1_resid      -0.0154      0.503     -0.031      0.976        -1.015     0.984
+y2_resid      -0.5383      0.214     -2.519      0.013        -0.962    -0.114
+y3_resid      -2.6309      0.734     -3.584      0.001        -4.088    -1.174
+==============================================================================
+Omnibus:                       68.656   Durbin-Watson:                   0.653
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              371.949
+Skew:                           2.233   Prob(JB):                     1.71e-81
+Kurtosis:                      11.273   Cond. No.                         10.3
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  KCFSI   R-squared:                       0.421
+Model:                            OLS   Adj. R-squared:                  0.384
+Method:                 Least Squares   F-statistic:                     11.37
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.60e-09
+Time:                        15:15:59   Log-Likelihood:                -112.16
+No. Observations:                 101   AIC:                             238.3
+Df Residuals:                      94   BIC:                             256.6
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         -0.5253      0.239     -2.200      0.030        -1.000    -0.051
+y1_IV         -0.5373      0.199     -2.695      0.008        -0.933    -0.141
+y2_IV         -0.4333      0.157     -2.764      0.007        -0.745    -0.122
+y3_IV         -0.9983      0.539     -1.851      0.067        -2.069     0.072
+y1_resid      -0.8115      0.572     -1.419      0.159        -1.947     0.324
+y2_resid      -0.7820      0.227     -3.446      0.001        -1.233    -0.331
+y3_resid      -1.4359      0.790     -1.819      0.072        -3.004     0.132
+==============================================================================
+Omnibus:                       61.047   Durbin-Watson:                   0.497
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              277.478
+Skew:                           2.002   Prob(JB):                     5.58e-61
+Kurtosis:                      10.064   Cond. No.                         18.6
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  KCFSI   R-squared:                       0.760
+Model:                            OLS   Adj. R-squared:                  0.747
+Method:                 Least Squares   F-statistic:                     57.78
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           9.29e-27
+Time:                        15:15:59   Log-Likelihood:                -65.938
+No. Observations:                  97   AIC:                             143.9
+Df Residuals:                      91   BIC:                             159.3
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         -0.0323      0.125     -0.259      0.796        -0.280     0.215
+y1_IV         -0.0482      0.109     -0.442      0.659        -0.265     0.168
+y2_IV         -0.0923      0.093     -0.991      0.324        -0.277     0.093
+y3_IV         -0.3722      0.351     -1.060      0.292        -1.069     0.325
+lag_0          1.0636      0.102     10.452      0.000         0.861     1.266
+lag_1         -0.2710      0.101     -2.674      0.009        -0.472    -0.070
+==============================================================================
+Omnibus:                       39.413   Durbin-Watson:                   1.898
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              172.997
+Skew:                           1.199   Prob(JB):                     2.72e-38
+Kurtosis:                       9.087   Cond. No.                         10.7
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  KCFSI   R-squared:                       0.766
+Model:                            OLS   Adj. R-squared:                  0.753
+Method:                 Least Squares   F-statistic:                     59.60
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           3.20e-27
+Time:                        15:15:59   Log-Likelihood:                -64.791
+No. Observations:                  97   AIC:                             141.6
+Df Residuals:                      91   BIC:                             157.0
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         -0.0069      0.052     -0.133      0.894        -0.109     0.096
+y1_resid      -0.2074      0.301     -0.689      0.492        -0.805     0.390
+y2_resid      -0.1343      0.132     -1.019      0.311        -0.396     0.128
+y3_resid      -0.4191      0.480     -0.873      0.385        -1.373     0.535
+lag_0          1.0560      0.101     10.494      0.000         0.856     1.256
+lag_1         -0.3043      0.101     -3.023      0.003        -0.504    -0.104
+==============================================================================
+Omnibus:                       36.549   Durbin-Watson:                   1.893
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              128.830
+Skew:                           1.186   Prob(JB):                     1.06e-28
+Kurtosis:                       8.124   Cond. No.                         14.6
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  KCFSI   R-squared:                       0.779
+Model:                            OLS   Adj. R-squared:                  0.758
+Method:                 Least Squares   F-statistic:                     38.67
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.22e-25
+Time:                        15:15:59   Log-Likelihood:                -62.139
+No. Observations:                  97   AIC:                             142.3
+Df Residuals:                      88   BIC:                             165.5
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         -0.2306      0.173     -1.331      0.187        -0.575     0.114
+y1_IV         -0.2104      0.145     -1.447      0.151        -0.499     0.079
+y2_IV         -0.1967      0.107     -1.846      0.068        -0.409     0.015
+y3_IV         -0.2495      0.368     -0.678      0.499        -0.981     0.481
+y1_resid      -0.5629      0.392     -1.437      0.154        -1.341     0.216
+y2_resid      -0.2765      0.165     -1.675      0.098        -0.605     0.052
+y3_resid      -0.1187      0.550     -0.216      0.830        -1.212     0.975
+lag_0          1.0113      0.102      9.939      0.000         0.809     1.213
+lag_1         -0.3210      0.102     -3.155      0.002        -0.523    -0.119
+==============================================================================
+Omnibus:                       36.552   Durbin-Watson:                   1.838
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              122.867
+Skew:                           1.208   Prob(JB):                     2.09e-27
+Kurtosis:                       7.957   Cond. No.                         21.0
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.

@@ -1,0 +1,200 @@
+significance of residuals in regular OLS
+likelihood ratio:
+(42.615732783400404, 2.9695492731462991e-09)
+F-test:
+<F test: F=array([[ 15.50395331]]), p=6.6877834953342e-09, df_denom=160, df_num=3>
+significance of residuals in VAR-X
+likelihood ratio:
+(11.344021421592117, 0.010003907528996048)
+F-test:
+<F test: F=array([[ 3.70084757]]), p=0.013100979542815899, df_denom=156, df_num=3>
+significance of IV in regular OLS
+likelihood ratio:
+(5.209937117537379, 0.15705435714454852)
+F-test:
+<F test: F=array([[ 272760.40705932]]), p=1.9796320254997108e-296, df_denom=160, df_num=3>
+significance of IV in VAR-X
+likelihood ratio:
+(1.78852669745703, 0.61743483220812911)
+F-test:
+<F test: F=array([[ 6.18749508]]), p=0.0005332975533085556, df_denom=156, df_num=3>
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               BCI OECD   R-squared:                       0.022
+Model:                            OLS   Adj. R-squared:                  0.004
+Method:                 Least Squares   F-statistic:                     1.200
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):              0.312
+Time:                        15:15:59   Log-Likelihood:                -313.49
+No. Observations:                 167   AIC:                             635.0
+Df Residuals:                     163   BIC:                             647.4
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         99.9941      0.130    769.046      0.000        99.737   100.251
+y1_IV          0.1825      0.120      1.521      0.130        -0.054     0.419
+y2_IV         -0.1561      0.223     -0.701      0.484        -0.596     0.283
+y3_IV          0.2213      0.743      0.298      0.766        -1.246     1.688
+==============================================================================
+Omnibus:                       11.791   Durbin-Watson:                   0.144
+Prob(Omnibus):                  0.003   Jarque-Bera (JB):                6.345
+Skew:                           0.287   Prob(JB):                       0.0419
+Kurtosis:                       2.237   Cond. No.                         7.07
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               BCI OECD   R-squared:                       0.218
+Model:                            OLS   Adj. R-squared:                  0.204
+Method:                 Least Squares   F-statistic:                     15.14
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           9.71e-09
+Time:                        15:15:59   Log-Likelihood:                -294.78
+No. Observations:                 167   AIC:                             597.6
+Df Residuals:                     163   BIC:                             610.0
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         99.9614      0.111    901.276      0.000        99.742   100.180
+y1_resid       1.1382      0.467      2.439      0.016         0.217     2.060
+y2_resid       1.5440      0.316      4.889      0.000         0.920     2.168
+y3_resid      -4.3399      0.760     -5.708      0.000        -5.841    -2.839
+==============================================================================
+Omnibus:                        1.532   Durbin-Watson:                   0.302
+Prob(Omnibus):                  0.465   Jarque-Bera (JB):                1.491
+Skew:                           0.139   Prob(JB):                        0.474
+Kurtosis:                       2.629   Cond. No.                         7.43
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               BCI OECD   R-squared:                       0.242
+Model:                            OLS   Adj. R-squared:                  0.214
+Method:                 Least Squares   F-statistic:                     8.512
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           4.98e-08
+Time:                        15:15:59   Log-Likelihood:                -292.18
+No. Observations:                 167   AIC:                             598.4
+Df Residuals:                     160   BIC:                             620.2
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         99.9787      0.116    860.279      0.000        99.749   100.208
+y1_IV          0.1736      0.108      1.613      0.109        -0.039     0.386
+y2_IV         -0.2132      0.200     -1.066      0.288        -0.608     0.182
+y3_IV          0.2315      0.663      0.349      0.727        -1.077     1.540
+y1_resid       1.1499      0.466      2.466      0.015         0.229     2.071
+y2_resid       1.5660      0.315      4.967      0.000         0.943     2.189
+y3_resid      -4.3493      0.757     -5.744      0.000        -5.845    -2.854
+==============================================================================
+Omnibus:                        3.879   Durbin-Watson:                   0.348
+Prob(Omnibus):                  0.144   Jarque-Bera (JB):                3.003
+Skew:                           0.201   Prob(JB):                        0.223
+Kurtosis:                       2.480   Cond. No.                         8.72
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               BCI OECD   R-squared:                       0.894
+Model:                            OLS   Adj. R-squared:                  0.890
+Method:                 Least Squares   F-statistic:                     267.6
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.78e-75
+Time:                        15:15:59   Log-Likelihood:                -124.13
+No. Observations:                 165   AIC:                             260.3
+Df Residuals:                     159   BIC:                             278.9
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          9.2713      2.651      3.497      0.001         4.035    14.508
+y1_IV          0.0229      0.040      0.568      0.571        -0.057     0.102
+y2_IV         -0.0433      0.074     -0.587      0.558        -0.189     0.102
+y3_IV          0.0606      0.243      0.249      0.804        -0.420     0.541
+lag_0          1.4248      0.077     18.567      0.000         1.273     1.576
+lag_1         -0.5178      0.076     -6.818      0.000        -0.668    -0.368
+==============================================================================
+Omnibus:                       77.199   Durbin-Watson:                   1.619
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              513.147
+Skew:                          -1.558   Prob(JB):                    3.73e-112
+Kurtosis:                      11.058   Cond. No.                     9.21e+03
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 9.21e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               BCI OECD   R-squared:                       0.900
+Model:                            OLS   Adj. R-squared:                  0.897
+Method:                 Least Squares   F-statistic:                     285.4
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.80e-77
+Time:                        15:15:59   Log-Likelihood:                -119.35
+No. Observations:                 165   AIC:                             250.7
+Df Residuals:                     159   BIC:                             269.3
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         12.2517      2.968      4.127      0.000         6.389    18.114
+y1_resid      -0.0744      0.179     -0.416      0.678        -0.428     0.279
+y2_resid       0.1175      0.121      0.968      0.335        -0.122     0.357
+y3_resid      -0.6987      0.311     -2.244      0.026        -1.314    -0.084
+lag_0          1.4098      0.076     18.493      0.000         1.259     1.560
+lag_1         -0.5327      0.077     -6.900      0.000        -0.685    -0.380
+==============================================================================
+Omnibus:                       70.912   Durbin-Watson:                   1.643
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              424.627
+Skew:                          -1.439   Prob(JB):                     6.22e-93
+Kurtosis:                      10.313   Cond. No.                     1.06e+04
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.06e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               BCI OECD   R-squared:                       0.901
+Model:                            OLS   Adj. R-squared:                  0.896
+Method:                 Least Squares   F-statistic:                     177.1
+Date:                Mon, 28 Mar 2016   Prob (F-statistic):           3.26e-74
+Time:                        15:15:59   Log-Likelihood:                -118.45
+No. Observations:                 165   AIC:                             254.9
+Df Residuals:                     156   BIC:                             282.9
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         12.6801      3.008      4.216      0.000         6.739    18.621
+y1_IV          0.0152      0.040      0.383      0.703        -0.063     0.094
+y2_IV         -0.0774      0.073     -1.060      0.291        -0.222     0.067
+y3_IV          0.0290      0.238      0.122      0.903        -0.442     0.500
+y1_resid      -0.0774      0.181     -0.427      0.670        -0.435     0.280
+y2_resid       0.1230      0.123      1.001      0.318        -0.120     0.366
+y3_resid      -0.7285      0.313     -2.324      0.021        -1.348    -0.109
+lag_0          1.4002      0.077     18.168      0.000         1.248     1.552
+lag_1         -0.5274      0.078     -6.765      0.000        -0.681    -0.373
+==============================================================================
+Omnibus:                       70.718   Durbin-Watson:                   1.652
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              428.128
+Skew:                          -1.429   Prob(JB):                     1.08e-93
+Kurtosis:                      10.356   Cond. No.                     1.07e+04
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.07e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.

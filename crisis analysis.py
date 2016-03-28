@@ -21,12 +21,12 @@ def lltest(model0,modelA):
     stat = 2*(modelA.llf - model0.llf)
     return stat, 1-chi2.cdf(stat, modelA.df_model-model0.df_model )
 
-dfx = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)
-dfy = pd.read_excel('leverages.xlsx',index_col=0)
-dfz = pd.read_excel('financial stability measures continuous.xlsx',index_col=1).drop('dropme',axis=1)
+dfx = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)[pd.Timestamp('1969-07-01 00:00:00'):pd.Timestamp('2015-07-01 00:00:00')]
+dfy = pd.read_excel('leverages.xlsx',index_col=0)[pd.Timestamp('1969-07-01 00:00:00'):pd.Timestamp('2015-07-01 00:00:00')]
+dfz = pd.read_excel('financial stability measures continuous.xlsx',index_col=1).drop('dropme',axis=1)[pd.Timestamp('1969-07-01 00:00:00'):pd.Timestamp('2015-07-01 00:00:00')]
 
 _,dfy_pca,_,_ = pca(dfy,3)
-f =  sm.OLS(dfy_pca,dfx).fit() 
+f =  sm.OLS(dfy_pca,dfx,missing='drop').fit() 
 IV = f.fittedvalues
 rem = f.resid
 IV.columns = list(map(lambda x: x+'_IV', IV.columns))
@@ -41,30 +41,45 @@ estims = {}
 #                                'IV':sm.Logit(dfz['NBER RECESSIONS'], sm.add_constant(IV)).fit()}
 # example continuous  
 for col in dfz.columns:
-    estims[col] = {     'direct':sm.OLS(dfz[col], sm.add_constant(sep)).fit(), 
-                        'IV':    sm.OLS(dfz[col], sm.add_constant(IV)).fit(),
-                        'VARX-IV':  sm.OLS(dfz[col], sm.add_constant(IV.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index)))).fit(),
-                        'VARX-direct':  sm.OLS(dfz[col], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index)))).fit(),
-                        }
+    estims[col] = {     'direct':sm.OLS(dfz[col], sm.add_constant(sep), missing='drop').fit(), 
+                        'IV':    sm.OLS(dfz[col], sm.add_constant(IV), missing='drop').fit(),
+                        'rem':   sm.OLS(dfz[col], sm.add_constant(rem), missing='drop').fit(),
+                        'VARX-IV':    sm.OLS(dfz[col], sm.add_constant(IV.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index))), missing='drop').fit(),
+                        'VARX-rem':   sm.OLS(dfz[col], sm.add_constant(rem.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index))), missing='drop').fit(),
+                        'VARX-direct':sm.OLS(dfz[col], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index))), missing='drop').fit() }
 
 for col in dfz.columns:
-    with open(col+'.txt','w') as f:
+    with open('results/'+col.replace('/','')+'.txt','w') as f:
         # significantie van parameters
-        print('significance of residuals in regular OLS')
-        print('likelihood ratio:')
+        print('significance of residuals in regular OLS', file=f)
+        print('likelihood ratio:', file=f)
         print(lltest(estims[col]['IV'],estims[col]['direct']), file=f)
-        print('F-test:')
+        print('F-test:', file=f)
         print(estims[col]['direct'].f_test(np.array([[0,0,0,0,1,0,0],[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])), file=f)
-        print('significance of residuals in VAR-X')
-        print('likelihood ratio:')
+        print('significance of residuals in VAR-X', file=f)
+        print('likelihood ratio:', file=f)
         print(lltest(estims[col]['VARX-IV'],estims[col]['VARX-direct']), file=f)
-        print('F-test:')
+        print('F-test:', file=f)
         print(estims[col]['VARX-direct'].f_test(np.array([[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0,0]])), file=f)
+        
+        # significantie van parameters
+        print('significance of IV in regular OLS', file=f)
+        print('likelihood ratio:', file=f)
+        print(lltest(estims[col]['rem'],estims[col]['direct']), file=f)
+        print('F-test:', file=f)
+        print(estims[col]['direct'].f_test(np.array([[1,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,1,0,0,0,0]])), file=f)
+        print('significance of IV in VAR-X', file=f)
+        print('likelihood ratio:', file=f)
+        print(lltest(estims[col]['VARX-rem'],estims[col]['VARX-direct']), file=f)
+        print('F-test:', file=f)
+        print(estims[col]['VARX-direct'].f_test(np.array([[1,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0]])), file=f)
 
         # samenvatting van regressies
         print(estims[col]['IV'].summary(), file=f)
+        print(estims[col]['rem'].summary(), file=f)
         print(estims[col]['direct'].summary(), file=f)
         print(estims[col]['VARX-IV'].summary(), file=f)
+        print(estims[col]['VARX-rem'].summary(), file=f)
         print(estims[col]['VARX-direct'].summary(), file=f)
         
 
