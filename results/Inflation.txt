@@ -1,30 +1,30 @@
-significance of residuals in regular OLS
-likelihood ratio:
-(62.973428693293272, 1.3611334281904419e-13)
-F-test:
-<F test: F=array([[ 24.0599836]]), p=4.053178022333359e-13, df_denom=178, df_num=3>
-significance of residuals in VAR-X
-likelihood ratio:
-(10.491256538456014, 0.014820326530417205)
-F-test:
-<F test: F=array([[ 3.42310086]]), p=0.018489576034151255, df_denom=176, df_num=3>
-significance of IV in regular OLS
-likelihood ratio:
-(150.02978222870343, 0.0)
-F-test:
-<F test: F=array([[ 378.92723282]]), p=5.095273373428294e-77, df_denom=178, df_num=3>
-significance of IV in VAR-X
-likelihood ratio:
-(19.35282997758361, 0.00023110706186435515)
-F-test:
-<F test: F=array([[ 8.38844002]]), p=3.0462583914949725e-05, df_denom=176, df_num=3>
+
+		significance of lags
+likelihood ratio: (319.97566555791047, 0.0)
+F-test: <F test: F=array([[ 34.33297399]]), p=2.452796036446803e-13, df_denom=178, df_num=2>
+
+		significance of residuals in regular OLS
+likelihood ratio: (62.973428693293272, 1.3611334281904419e-13)
+F-test: <F test: F=array([[ 24.0599836]]), p=4.053178022333359e-13, df_denom=178, df_num=3>
+
+		significance of residuals in VAR-X
+likelihood ratio: (10.491256538456014, 0.014820326530417205)
+F-test: <F test: F=array([[ 3.42310086]]), p=0.018489576034151255, df_denom=176, df_num=3>
+
+		significance of IV in regular OLS
+likelihood ratio: (150.02978222870343, 0.0)
+F-test: <F test: F=array([[ 378.92723282]]), p=5.095273373428294e-77, df_denom=178, df_num=3>
+
+		significance of IV in VAR-X
+likelihood ratio: (19.35282997758361, 0.00023110706186435515)
+F-test: <F test: F=array([[ 8.38844002]]), p=3.0462583914949725e-05, df_denom=176, df_num=3>
                             OLS Regression Results                            
 ==============================================================================
 Dep. Variable:              Inflation   R-squared:                       0.471
 Model:                            OLS   Adj. R-squared:                  0.462
 Method:                 Least Squares   F-statistic:                     53.66
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           7.31e-25
-Time:                        15:15:58   Log-Likelihood:                -405.46
+Time:                        15:29:10   Log-Likelihood:                -405.46
 No. Observations:                 185   AIC:                             818.9
 Df Residuals:                     181   BIC:                             831.8
 Df Model:                           3                                         
@@ -51,7 +51,7 @@ Dep. Variable:              Inflation   R-squared:                       0.153
 Model:                            OLS   Adj. R-squared:                  0.139
 Method:                 Least Squares   F-statistic:                     10.87
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.33e-06
-Time:                        15:15:59   Log-Likelihood:                -448.98
+Time:                        15:29:10   Log-Likelihood:                -448.98
 No. Observations:                 185   AIC:                             906.0
 Df Residuals:                     181   BIC:                             918.8
 Df Model:                           3                                         
@@ -78,7 +78,7 @@ Dep. Variable:              Inflation   R-squared:                       0.623
 Model:                            OLS   Adj. R-squared:                  0.611
 Method:                 Least Squares   F-statistic:                     49.12
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           2.87e-35
-Time:                        15:15:59   Log-Likelihood:                -373.97
+Time:                        15:29:10   Log-Likelihood:                -373.97
 No. Observations:                 185   AIC:                             761.9
 Df Residuals:                     178   BIC:                             784.5
 Df Model:                           6                                         
@@ -108,7 +108,7 @@ Dep. Variable:              Inflation   R-squared:                       0.929
 Model:                            OLS   Adj. R-squared:                  0.927
 Method:                 Least Squares   F-statistic:                     470.7
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):          6.02e-101
-Time:                        15:15:59   Log-Likelihood:                -219.23
+Time:                        15:29:10   Log-Likelihood:                -219.23
 No. Observations:                 185   AIC:                             450.5
 Df Residuals:                     179   BIC:                             469.8
 Df Model:                           5                                         
@@ -137,7 +137,7 @@ Dep. Variable:              Inflation   R-squared:                       0.926
 Model:                            OLS   Adj. R-squared:                  0.924
 Method:                 Least Squares   F-statistic:                     447.0
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           4.35e-99
-Time:                        15:15:59   Log-Likelihood:                -223.66
+Time:                        15:29:10   Log-Likelihood:                -223.66
 No. Observations:                 185   AIC:                             459.3
 Df Residuals:                     179   BIC:                             478.6
 Df Model:                           5                                         
@@ -166,7 +166,7 @@ Dep. Variable:              Inflation   R-squared:                       0.933
 Model:                            OLS   Adj. R-squared:                  0.930
 Method:                 Least Squares   F-statistic:                     307.4
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           3.69e-99
-Time:                        15:15:59   Log-Likelihood:                -213.98
+Time:                        15:29:10   Log-Likelihood:                -213.98
 No. Observations:                 185   AIC:                             446.0
 Df Residuals:                     176   BIC:                             474.9
 Df Model:                           8                                         

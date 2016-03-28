@@ -1,30 +1,30 @@
-significance of residuals in regular OLS
-likelihood ratio:
-(112.54503663562514, 0.0)
-F-test:
-<F test: F=array([[ 49.68573557]]), p=2.2236164966131593e-23, df_denom=178, df_num=3>
-significance of residuals in VAR-X
-likelihood ratio:
-(12.826930300918207, 0.0050262269006726701)
-F-test:
-<F test: F=array([[ 4.2119699]]), p=0.006612932715560296, df_denom=176, df_num=3>
-significance of IV in regular OLS
-likelihood ratio:
-(224.11332336716055, 0.0)
-F-test:
-<F test: F=array([[ 621.24046677]]), p=5.094353163105368e-94, df_denom=178, df_num=3>
-significance of IV in VAR-X
-likelihood ratio:
-(26.908233786208712, 6.1539975684254955e-06)
-F-test:
-<F test: F=array([[ 10.44350231]]), p=2.333766308185838e-06, df_denom=176, df_num=3>
+
+		significance of lags
+likelihood ratio: (129.34203838611108, 0.0)
+F-test: <F test: F=array([[ 65.6632267]]), p=4.367789213438999e-22, df_denom=178, df_num=2>
+
+		significance of residuals in regular OLS
+likelihood ratio: (112.54503663562514, 0.0)
+F-test: <F test: F=array([[ 49.68573557]]), p=2.2236164966131593e-23, df_denom=178, df_num=3>
+
+		significance of residuals in VAR-X
+likelihood ratio: (12.826930300918207, 0.0050262269006726701)
+F-test: <F test: F=array([[ 4.2119699]]), p=0.006612932715560296, df_denom=176, df_num=3>
+
+		significance of IV in regular OLS
+likelihood ratio: (224.11332336716055, 0.0)
+F-test: <F test: F=array([[ 621.24046677]]), p=5.094353163105368e-94, df_denom=178, df_num=3>
+
+		significance of IV in VAR-X
+likelihood ratio: (26.908233786208712, 6.1539975684254955e-06)
+F-test: <F test: F=array([[ 10.44350231]]), p=2.333766308185838e-06, df_denom=176, df_num=3>
                                  OLS Regression Results                                 
 ========================================================================================
 Dep. Variable:     Federal funds effective rate   R-squared:                       0.562
 Model:                                      OLS   Adj. R-squared:                  0.555
 Method:                           Least Squares   F-statistic:                     77.44
 Date:                          Mon, 28 Mar 2016   Prob (F-statistic):           2.86e-32
-Time:                                  15:15:59   Log-Likelihood:                -437.92
+Time:                                  15:29:11   Log-Likelihood:                -437.92
 No. Observations:                           185   AIC:                             883.8
 Df Residuals:                               181   BIC:                             896.7
 Df Model:                                     3                                         
@@ -51,7 +51,7 @@ Dep. Variable:     Federal funds effective rate   R-squared:                    
 Model:                                      OLS   Adj. R-squared:                  0.186
 Method:                           Least Squares   F-statistic:                     15.04
 Date:                          Mon, 28 Mar 2016   Prob (F-statistic):           8.75e-09
-Time:                                  15:15:59   Log-Likelihood:                -493.71
+Time:                                  15:29:11   Log-Likelihood:                -493.71
 No. Observations:                           185   AIC:                             995.4
 Df Residuals:                               181   BIC:                             1008.
 Df Model:                                     3                                         
@@ -78,7 +78,7 @@ Dep. Variable:     Federal funds effective rate   R-squared:                    
 Model:                                      OLS   Adj. R-squared:                  0.754
 Method:                           Least Squares   F-statistic:                     94.80
 Date:                          Mon, 28 Mar 2016   Prob (F-statistic):           8.90e-53
-Time:                                  15:16:00   Log-Likelihood:                -381.65
+Time:                                  15:29:11   Log-Likelihood:                -381.65
 No. Observations:                           185   AIC:                             777.3
 Df Residuals:                               178   BIC:                             799.8
 Df Model:                                     6                                         
@@ -108,7 +108,7 @@ Dep. Variable:     Federal funds effective rate   R-squared:                    
 Model:                                      OLS   Adj. R-squared:                  0.869
 Method:                           Least Squares   F-statistic:                     246.2
 Date:                          Mon, 28 Mar 2016   Prob (F-statistic):           3.20e-78
-Time:                                  15:16:00   Log-Likelihood:                -323.39
+Time:                                  15:29:11   Log-Likelihood:                -323.39
 No. Observations:                           185   AIC:                             658.8
 Df Residuals:                               179   BIC:                             678.1
 Df Model:                                     5                                         
@@ -137,7 +137,7 @@ Dep. Variable:     Federal funds effective rate   R-squared:                    
 Model:                                      OLS   Adj. R-squared:                  0.859
 Method:                           Least Squares   F-statistic:                     225.5
 Date:                          Mon, 28 Mar 2016   Prob (F-statistic):           2.86e-75
-Time:                                  15:16:00   Log-Likelihood:                -330.43
+Time:                                  15:29:11   Log-Likelihood:                -330.43
 No. Observations:                           185   AIC:                             672.9
 Df Residuals:                               179   BIC:                             692.2
 Df Model:                                     5                                         
@@ -166,7 +166,7 @@ Dep. Variable:     Federal funds effective rate   R-squared:                    
 Model:                                      OLS   Adj. R-squared:                  0.876
 Method:                           Least Squares   F-statistic:                     163.7
 Date:                          Mon, 28 Mar 2016   Prob (F-statistic):           2.49e-77
-Time:                                  15:16:00   Log-Likelihood:                -316.98
+Time:                                  15:29:11   Log-Likelihood:                -316.98
 No. Observations:                           185   AIC:                             652.0
 Df Residuals:                               176   BIC:                             680.9
 Df Model:                                     8                                         

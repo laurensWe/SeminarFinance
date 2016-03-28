@@ -1,30 +1,30 @@
-significance of residuals in regular OLS
-likelihood ratio:
-(37.615132172620719, 3.4097001888611089e-08)
-F-test:
-<F test: F=array([[ 14.13924839]]), p=1.1118966026669744e-07, df_denom=94, df_num=3>
-significance of residuals in VAR-X
-likelihood ratio:
-(7.5985805192411533, 0.055078871414128927)
-F-test:
-<F test: F=array([[ 2.39025157]]), p=0.07408766991494929, df_denom=88, df_num=3>
-significance of IV in regular OLS
-likelihood ratio:
-(20.172051057100504, 0.00015636078659841957)
-F-test:
-<F test: F=array([[ 3.33837934]]), p=0.022632402855253624, df_denom=94, df_num=3>
-significance of IV in VAR-X
-likelihood ratio:
-(5.3040104028082737, 0.15084237371841103)
-F-test:
-<F test: F=array([[ 1.17177437]]), p=0.32515214293412936, df_denom=88, df_num=3>
+
+		significance of lags
+likelihood ratio: (100.03440452610937, 0.0)
+F-test: <F test: F=array([[ 17.08986187]]), p=4.671975452597008e-07, df_denom=94, df_num=2>
+
+		significance of residuals in regular OLS
+likelihood ratio: (37.615132172620719, 3.4097001888611089e-08)
+F-test: <F test: F=array([[ 14.13924839]]), p=1.1118966026669744e-07, df_denom=94, df_num=3>
+
+		significance of residuals in VAR-X
+likelihood ratio: (7.5985805192411533, 0.055078871414128927)
+F-test: <F test: F=array([[ 2.39025157]]), p=0.07408766991494929, df_denom=88, df_num=3>
+
+		significance of IV in regular OLS
+likelihood ratio: (20.172051057100504, 0.00015636078659841957)
+F-test: <F test: F=array([[ 3.33837934]]), p=0.022632402855253624, df_denom=94, df_num=3>
+
+		significance of IV in VAR-X
+likelihood ratio: (5.3040104028082737, 0.15084237371841103)
+F-test: <F test: F=array([[ 1.17177437]]), p=0.32515214293412936, df_denom=88, df_num=3>
                             OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                  KCFSI   R-squared:                       0.159
 Model:                            OLS   Adj. R-squared:                  0.133
 Method:                 Least Squares   F-statistic:                     6.120
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           0.000741
-Time:                        15:15:59   Log-Likelihood:                -130.96
+Time:                        15:29:10   Log-Likelihood:                -130.96
 No. Observations:                 101   AIC:                             269.9
 Df Residuals:                      97   BIC:                             280.4
 Df Model:                           3                                         
@@ -51,7 +51,7 @@ Dep. Variable:                  KCFSI   R-squared:                       0.293
 Model:                            OLS   Adj. R-squared:                  0.271
 Method:                 Least Squares   F-statistic:                     13.37
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           2.25e-07
-Time:                        15:15:59   Log-Likelihood:                -122.24
+Time:                        15:29:10   Log-Likelihood:                -122.24
 No. Observations:                 101   AIC:                             252.5
 Df Residuals:                      97   BIC:                             262.9
 Df Model:                           3                                         
@@ -78,7 +78,7 @@ Dep. Variable:                  KCFSI   R-squared:                       0.421
 Model:                            OLS   Adj. R-squared:                  0.384
 Method:                 Least Squares   F-statistic:                     11.37
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.60e-09
-Time:                        15:15:59   Log-Likelihood:                -112.16
+Time:                        15:29:10   Log-Likelihood:                -112.16
 No. Observations:                 101   AIC:                             238.3
 Df Residuals:                      94   BIC:                             256.6
 Df Model:                           6                                         
@@ -108,7 +108,7 @@ Dep. Variable:                  KCFSI   R-squared:                       0.760
 Model:                            OLS   Adj. R-squared:                  0.747
 Method:                 Least Squares   F-statistic:                     57.78
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           9.29e-27
-Time:                        15:15:59   Log-Likelihood:                -65.938
+Time:                        15:29:10   Log-Likelihood:                -65.938
 No. Observations:                  97   AIC:                             143.9
 Df Residuals:                      91   BIC:                             159.3
 Df Model:                           5                                         
@@ -137,7 +137,7 @@ Dep. Variable:                  KCFSI   R-squared:                       0.766
 Model:                            OLS   Adj. R-squared:                  0.753
 Method:                 Least Squares   F-statistic:                     59.60
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           3.20e-27
-Time:                        15:15:59   Log-Likelihood:                -64.791
+Time:                        15:29:10   Log-Likelihood:                -64.791
 No. Observations:                  97   AIC:                             141.6
 Df Residuals:                      91   BIC:                             157.0
 Df Model:                           5                                         
@@ -166,7 +166,7 @@ Dep. Variable:                  KCFSI   R-squared:                       0.779
 Model:                            OLS   Adj. R-squared:                  0.758
 Method:                 Least Squares   F-statistic:                     38.67
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.22e-25
-Time:                        15:15:59   Log-Likelihood:                -62.139
+Time:                        15:29:10   Log-Likelihood:                -62.139
 No. Observations:                  97   AIC:                             142.3
 Df Residuals:                      88   BIC:                             165.5
 Df Model:                           8                                         

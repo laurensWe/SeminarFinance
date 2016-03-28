@@ -1,30 +1,30 @@
-significance of residuals in regular OLS
-likelihood ratio:
-(24.28257095806066, 2.1806504260202253e-05)
-F-test:
-<F test: F=array([[ 8.50757602]]), p=4.558777389523611e-05, df_denom=96, df_num=3>
-significance of residuals in VAR-X
-likelihood ratio:
-(6.6295028542449472, 0.084692784425176248)
-F-test:
-<F test: F=array([[ 2.08045043]]), p=0.10819488572141409, df_denom=92, df_num=3>
-significance of IV in regular OLS
-likelihood ratio:
-(18.189444491932818, 0.00040199729775280968)
-F-test:
-<F test: F=array([[ 301.8079452]]), p=9.871659591588965e-49, df_denom=96, df_num=3>
-significance of IV in VAR-X
-likelihood ratio:
-(5.6000368045563391, 0.13277624512762509)
-F-test:
-<F test: F=array([[ 7.01540832]]), p=0.00026651885499957476, df_denom=92, df_num=3>
+
+		significance of lags
+likelihood ratio: (27.952584091944686, 8.5147810890973119e-07)
+F-test: <F test: F=array([[ 12.49867274]]), p=1.4989209982210957e-05, df_denom=96, df_num=2>
+
+		significance of residuals in regular OLS
+likelihood ratio: (24.28257095806066, 2.1806504260202253e-05)
+F-test: <F test: F=array([[ 8.50757602]]), p=4.558777389523611e-05, df_denom=96, df_num=3>
+
+		significance of residuals in VAR-X
+likelihood ratio: (6.6295028542449472, 0.084692784425176248)
+F-test: <F test: F=array([[ 2.08045043]]), p=0.10819488572141409, df_denom=92, df_num=3>
+
+		significance of IV in regular OLS
+likelihood ratio: (18.189444491932818, 0.00040199729775280968)
+F-test: <F test: F=array([[ 301.8079452]]), p=9.871659591588965e-49, df_denom=96, df_num=3>
+
+		significance of IV in VAR-X
+likelihood ratio: (5.6000368045563391, 0.13277624512762509)
+F-test: <F test: F=array([[ 7.01540832]]), p=0.00026651885499957476, df_denom=92, df_num=3>
                             OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                    VIX   R-squared:                       0.141
 Model:                            OLS   Adj. R-squared:                  0.115
 Method:                 Least Squares   F-statistic:                     5.420
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):            0.00171
-Time:                        15:16:00   Log-Likelihood:                -344.89
+Time:                        15:29:11   Log-Likelihood:                -344.89
 No. Observations:                 103   AIC:                             697.8
 Df Residuals:                      99   BIC:                             708.3
 Df Model:                           3                                         
@@ -51,7 +51,7 @@ Dep. Variable:                    VIX   R-squared:                       0.190
 Model:                            OLS   Adj. R-squared:                  0.166
 Method:                 Least Squares   F-statistic:                     7.761
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           0.000105
-Time:                        15:16:00   Log-Likelihood:                -341.85
+Time:                        15:29:11   Log-Likelihood:                -341.85
 No. Observations:                 103   AIC:                             691.7
 Df Residuals:                      99   BIC:                             702.2
 Df Model:                           3                                         
@@ -78,7 +78,7 @@ Dep. Variable:                    VIX   R-squared:                       0.321
 Model:                            OLS   Adj. R-squared:                  0.279
 Method:                 Least Squares   F-statistic:                     7.580
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.14e-06
-Time:                        15:16:00   Log-Likelihood:                -332.75
+Time:                        15:29:11   Log-Likelihood:                -332.75
 No. Observations:                 103   AIC:                             679.5
 Df Residuals:                      96   BIC:                             697.9
 Df Model:                           6                                         
@@ -108,7 +108,7 @@ Dep. Variable:                    VIX   R-squared:                       0.386
 Model:                            OLS   Adj. R-squared:                  0.353
 Method:                 Least Squares   F-statistic:                     11.92
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           5.76e-09
-Time:                        15:16:00   Log-Likelihood:                -322.09
+Time:                        15:29:11   Log-Likelihood:                -322.09
 No. Observations:                 101   AIC:                             656.2
 Df Residuals:                      95   BIC:                             671.9
 Df Model:                           5                                         
@@ -137,7 +137,7 @@ Dep. Variable:                    VIX   R-squared:                       0.392
 Model:                            OLS   Adj. R-squared:                  0.360
 Method:                 Least Squares   F-statistic:                     12.24
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           3.63e-09
-Time:                        15:16:00   Log-Likelihood:                -321.58
+Time:                        15:29:11   Log-Likelihood:                -321.58
 No. Observations:                 101   AIC:                             655.2
 Df Residuals:                      95   BIC:                             670.8
 Df Model:                           5                                         
@@ -166,7 +166,7 @@ Dep. Variable:                    VIX   R-squared:                       0.425
 Model:                            OLS   Adj. R-squared:                  0.375
 Method:                 Least Squares   F-statistic:                     8.487
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.40e-08
-Time:                        15:16:00   Log-Likelihood:                -318.78
+Time:                        15:29:11   Log-Likelihood:                -318.78
 No. Observations:                 101   AIC:                             655.6
 Df Residuals:                      92   BIC:                             679.1
 Df Model:                           8                                         

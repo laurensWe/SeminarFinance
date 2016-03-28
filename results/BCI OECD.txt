@@ -1,30 +1,30 @@
-significance of residuals in regular OLS
-likelihood ratio:
-(42.615732783400404, 2.9695492731462991e-09)
-F-test:
-<F test: F=array([[ 15.50395331]]), p=6.6877834953342e-09, df_denom=160, df_num=3>
-significance of residuals in VAR-X
-likelihood ratio:
-(11.344021421592117, 0.010003907528996048)
-F-test:
-<F test: F=array([[ 3.70084757]]), p=0.013100979542815899, df_denom=156, df_num=3>
-significance of IV in regular OLS
-likelihood ratio:
-(5.209937117537379, 0.15705435714454852)
-F-test:
-<F test: F=array([[ 272760.40705932]]), p=1.9796320254997108e-296, df_denom=160, df_num=3>
-significance of IV in VAR-X
-likelihood ratio:
-(1.78852669745703, 0.61743483220812911)
-F-test:
-<F test: F=array([[ 6.18749508]]), p=0.0005332975533085556, df_denom=156, df_num=3>
+
+		significance of lags
+likelihood ratio: (347.45045198817536, 0.0)
+F-test: <F test: F=array([[ 21.1971893]]), p=6.819035165538239e-09, df_denom=160, df_num=2>
+
+		significance of residuals in regular OLS
+likelihood ratio: (42.615732783400404, 2.9695492731462991e-09)
+F-test: <F test: F=array([[ 15.50395331]]), p=6.6877834953342e-09, df_denom=160, df_num=3>
+
+		significance of residuals in VAR-X
+likelihood ratio: (11.344021421592117, 0.010003907528996048)
+F-test: <F test: F=array([[ 3.70084757]]), p=0.013100979542815899, df_denom=156, df_num=3>
+
+		significance of IV in regular OLS
+likelihood ratio: (5.209937117537379, 0.15705435714454852)
+F-test: <F test: F=array([[ 272760.40705932]]), p=1.9796320254997108e-296, df_denom=160, df_num=3>
+
+		significance of IV in VAR-X
+likelihood ratio: (1.78852669745703, 0.61743483220812911)
+F-test: <F test: F=array([[ 6.18749508]]), p=0.0005332975533085556, df_denom=156, df_num=3>
                             OLS Regression Results                            
 ==============================================================================
 Dep. Variable:               BCI OECD   R-squared:                       0.022
 Model:                            OLS   Adj. R-squared:                  0.004
 Method:                 Least Squares   F-statistic:                     1.200
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):              0.312
-Time:                        15:15:59   Log-Likelihood:                -313.49
+Time:                        15:29:11   Log-Likelihood:                -313.49
 No. Observations:                 167   AIC:                             635.0
 Df Residuals:                     163   BIC:                             647.4
 Df Model:                           3                                         
@@ -51,7 +51,7 @@ Dep. Variable:               BCI OECD   R-squared:                       0.218
 Model:                            OLS   Adj. R-squared:                  0.204
 Method:                 Least Squares   F-statistic:                     15.14
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           9.71e-09
-Time:                        15:15:59   Log-Likelihood:                -294.78
+Time:                        15:29:11   Log-Likelihood:                -294.78
 No. Observations:                 167   AIC:                             597.6
 Df Residuals:                     163   BIC:                             610.0
 Df Model:                           3                                         
@@ -78,7 +78,7 @@ Dep. Variable:               BCI OECD   R-squared:                       0.242
 Model:                            OLS   Adj. R-squared:                  0.214
 Method:                 Least Squares   F-statistic:                     8.512
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           4.98e-08
-Time:                        15:15:59   Log-Likelihood:                -292.18
+Time:                        15:29:11   Log-Likelihood:                -292.18
 No. Observations:                 167   AIC:                             598.4
 Df Residuals:                     160   BIC:                             620.2
 Df Model:                           6                                         
@@ -108,7 +108,7 @@ Dep. Variable:               BCI OECD   R-squared:                       0.894
 Model:                            OLS   Adj. R-squared:                  0.890
 Method:                 Least Squares   F-statistic:                     267.6
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.78e-75
-Time:                        15:15:59   Log-Likelihood:                -124.13
+Time:                        15:29:11   Log-Likelihood:                -124.13
 No. Observations:                 165   AIC:                             260.3
 Df Residuals:                     159   BIC:                             278.9
 Df Model:                           5                                         
@@ -139,7 +139,7 @@ Dep. Variable:               BCI OECD   R-squared:                       0.900
 Model:                            OLS   Adj. R-squared:                  0.897
 Method:                 Least Squares   F-statistic:                     285.4
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           1.80e-77
-Time:                        15:15:59   Log-Likelihood:                -119.35
+Time:                        15:29:11   Log-Likelihood:                -119.35
 No. Observations:                 165   AIC:                             250.7
 Df Residuals:                     159   BIC:                             269.3
 Df Model:                           5                                         
@@ -170,7 +170,7 @@ Dep. Variable:               BCI OECD   R-squared:                       0.901
 Model:                            OLS   Adj. R-squared:                  0.896
 Method:                 Least Squares   F-statistic:                     177.1
 Date:                Mon, 28 Mar 2016   Prob (F-statistic):           3.26e-74
-Time:                        15:15:59   Log-Likelihood:                -118.45
+Time:                        15:29:11   Log-Likelihood:                -118.45
 No. Observations:                 165   AIC:                             254.9
 Df Residuals:                     156   BIC:                             282.9
 Df Model:                           8                                         

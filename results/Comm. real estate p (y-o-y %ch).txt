@@ -1,30 +1,30 @@
-significance of residuals in regular OLS
-likelihood ratio:
-(16.264954578053448, 0.0010006057236837673)
-F-test:
-<F test: F=array([[ 5.45269287]]), p=0.0013106992108673312, df_denom=178, df_num=3>
-significance of residuals in VAR-X
-likelihood ratio:
-(3.9872642538504124, 0.26284264848826666)
-F-test:
-<F test: F=array([[ 1.27815416]]), p=0.283418786900605, df_denom=176, df_num=3>
-significance of IV in regular OLS
-likelihood ratio:
-(21.551751239224814, 8.0850686373978853e-05)
-F-test:
-<F test: F=array([[ 34.11567986]]), p=1.806087113725053e-17, df_denom=178, df_num=3>
-significance of IV in VAR-X
-likelihood ratio:
-(1.2619153476534848, 0.73819589605023639)
-F-test:
-<F test: F=array([[ 2.9857879]]), p=0.03263531853947685, df_denom=176, df_num=3>
+
+		significance of lags
+likelihood ratio: (304.4432804130588, 0.0)
+F-test: <F test: F=array([[ 5.72456257]]), p=0.003895277851687905, df_denom=178, df_num=2>
+
+		significance of residuals in regular OLS
+likelihood ratio: (16.264954578053448, 0.0010006057236837673)
+F-test: <F test: F=array([[ 5.45269287]]), p=0.0013106992108673312, df_denom=178, df_num=3>
+
+		significance of residuals in VAR-X
+likelihood ratio: (3.9872642538504124, 0.26284264848826666)
+F-test: <F test: F=array([[ 1.27815416]]), p=0.283418786900605, df_denom=176, df_num=3>
+
+		significance of IV in regular OLS
+likelihood ratio: (21.551751239224814, 8.0850686373978853e-05)
+F-test: <F test: F=array([[ 34.11567986]]), p=1.806087113725053e-17, df_denom=178, df_num=3>
+
+		significance of IV in VAR-X
+likelihood ratio: (1.2619153476534848, 0.73819589605023639)
+F-test: <F test: F=array([[ 2.9857879]]), p=0.03263531853947685, df_denom=176, df_num=3>
                                    OLS Regression Results                                  
 ===========================================================================================
 Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                       0.102
 Model:                                         OLS   Adj. R-squared:                  0.087
 Method:                              Least Squares   F-statistic:                     6.827
 Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           0.000220
-Time:                                     15:15:59   Log-Likelihood:                -647.50
+Time:                                     15:29:11   Log-Likelihood:                -647.50
 No. Observations:                              185   AIC:                             1303.
 Df Residuals:                                  181   BIC:                             1316.
 Df Model:                                        3                                         
@@ -51,7 +51,7 @@ Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                 
 Model:                                         OLS   Adj. R-squared:                  0.060
 Method:                              Least Squares   F-statistic:                     4.935
 Date:                             Mon, 28 Mar 2016   Prob (F-statistic):            0.00256
-Time:                                     15:15:59   Log-Likelihood:                -650.15
+Time:                                     15:29:11   Log-Likelihood:                -650.15
 No. Observations:                              185   AIC:                             1308.
 Df Residuals:                                  181   BIC:                             1321.
 Df Model:                                        3                                         
@@ -78,7 +78,7 @@ Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                 
 Model:                                         OLS   Adj. R-squared:                  0.150
 Method:                              Least Squares   F-statistic:                     6.392
 Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           4.10e-06
-Time:                                     15:15:59   Log-Likelihood:                -639.37
+Time:                                     15:29:11   Log-Likelihood:                -639.37
 No. Observations:                              185   AIC:                             1293.
 Df Residuals:                                  178   BIC:                             1315.
 Df Model:                                        6                                         
@@ -108,7 +108,7 @@ Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                 
 Model:                                         OLS   Adj. R-squared:                  0.833
 Method:                              Least Squares   F-statistic:                     185.0
 Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           9.73e-69
-Time:                                     15:15:59   Log-Likelihood:                -489.14
+Time:                                     15:29:11   Log-Likelihood:                -489.14
 No. Observations:                              185   AIC:                             990.3
 Df Residuals:                                  179   BIC:                             1010.
 Df Model:                                        5                                         
@@ -137,7 +137,7 @@ Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                 
 Model:                                         OLS   Adj. R-squared:                  0.836
 Method:                              Least Squares   F-statistic:                     188.3
 Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           2.61e-69
-Time:                                     15:15:59   Log-Likelihood:                -487.78
+Time:                                     15:29:11   Log-Likelihood:                -487.78
 No. Observations:                              185   AIC:                             987.6
 Df Residuals:                                  179   BIC:                             1007.
 Df Model:                                        5                                         
@@ -166,7 +166,7 @@ Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                 
 Model:                                         OLS   Adj. R-squared:                  0.834
 Method:                              Least Squares   F-statistic:                     116.6
 Date:                             Mon, 28 Mar 2016   Prob (F-statistic):           3.25e-66
-Time:                                     15:15:59   Log-Likelihood:                -487.15
+Time:                                     15:29:11   Log-Likelihood:                -487.15
 No. Observations:                              185   AIC:                             992.3
 Df Residuals:                                  176   BIC:                             1021.
 Df Model:                                        8                                         

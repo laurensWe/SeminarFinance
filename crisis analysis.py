@@ -51,28 +51,25 @@ for col in dfz.columns:
 for col in dfz.columns:
     with open('results/'+col.replace('/','')+'.txt','w') as f:
         # significantie van parameters
-        print('significance of residuals in regular OLS', file=f)
-        print('likelihood ratio:', file=f)
-        print(lltest(estims[col]['IV'],estims[col]['direct']), file=f)
-        print('F-test:', file=f)
-        print(estims[col]['direct'].f_test(np.array([[0,0,0,0,1,0,0],[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])), file=f)
-        print('significance of residuals in VAR-X', file=f)
-        print('likelihood ratio:', file=f)
-        print(lltest(estims[col]['VARX-IV'],estims[col]['VARX-direct']), file=f)
-        print('F-test:', file=f)
-        print(estims[col]['VARX-direct'].f_test(np.array([[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0,0]])), file=f)
+        print('\n\t\tsignificance of lags', file=f)
+        print('likelihood ratio:',lltest(estims[col]['direct'],estims[col]['VARX-direct']), file=f)
+        print('F-test:',estims[col]['direct'].f_test(np.array([[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])), file=f)
         
         # significantie van parameters
-        print('significance of IV in regular OLS', file=f)
-        print('likelihood ratio:', file=f)
-        print(lltest(estims[col]['rem'],estims[col]['direct']), file=f)
-        print('F-test:', file=f)
-        print(estims[col]['direct'].f_test(np.array([[1,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,1,0,0,0,0]])), file=f)
-        print('significance of IV in VAR-X', file=f)
-        print('likelihood ratio:', file=f)
-        print(lltest(estims[col]['VARX-rem'],estims[col]['VARX-direct']), file=f)
-        print('F-test:', file=f)
-        print(estims[col]['VARX-direct'].f_test(np.array([[1,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0]])), file=f)
+        print('\n\t\tsignificance of residuals in regular OLS', file=f)
+        print('likelihood ratio:',lltest(estims[col]['IV'],estims[col]['direct']), file=f)
+        print('F-test:',estims[col]['direct'].f_test(np.array([[0,0,0,0,1,0,0],[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])), file=f)
+        print('\n\t\tsignificance of residuals in VAR-X', file=f)
+        print('likelihood ratio:', lltest(estims[col]['VARX-IV'],estims[col]['VARX-direct']), file=f)
+        print('F-test:', estims[col]['VARX-direct'].f_test(np.array([[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0,0]])), file=f)
+        
+        # significantie van parameters
+        print('\n\t\tsignificance of IV in regular OLS', file=f)
+        print('likelihood ratio:', lltest(estims[col]['rem'],estims[col]['direct']), file=f)
+        print('F-test:', estims[col]['direct'].f_test(np.array([[1,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,1,0,0,0,0]])), file=f)
+        print('\n\t\tsignificance of IV in VAR-X', file=f)
+        print('likelihood ratio:', lltest(estims[col]['VARX-rem'],estims[col]['VARX-direct']), file=f)
+        print('F-test:', estims[col]['VARX-direct'].f_test(np.array([[1,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0]])), file=f)
 
         # samenvatting van regressies
         print(estims[col]['IV'].summary(), file=f)
