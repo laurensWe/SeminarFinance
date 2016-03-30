@@ -9,7 +9,7 @@ En een beetje van Beert
 import pandas as pd
 import os
 
-wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\6-Sectors\\Indices-Models\\PerSector\\'
+wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\14-Sectors\\Indices Models\Instruments\\'
 
 #%%
 dataframes = {}
@@ -24,7 +24,6 @@ instruments = pd.read_excel(wd + "_Instruments.xlsx")
 filesToTake = pd.read_excel(wd + "_FilesToTake.xlsx")
 sectors = pd.read_excel(wd + "_Sectors.xlsx")
 
-#%%
 assetNames = filesToTake['Assets.xlsx']
 
 #%%
@@ -41,6 +40,11 @@ for dates in instruments.index:
 Total = pd.DataFrame(0, index=instruments.index, columns=instruments.columns)
 for assetfile in filesToTake['Assets.xlsx']:
     Total = Total + pd.read_excel(wd+assetfile, index_col = 0)
+    print(assetfile + ': ' + str(len(Total.columns)))
+        
+    # Debug print line    
+    if len(pd.read_excel(wd+assetfile, index_col = 0).columns) != 28:
+        print(assetfile)
 
 for i in range(Total.shape[0]):
     for j in range(Total.shape[1]):
@@ -63,6 +67,8 @@ for dates in instruments.index:
         for assetfile in filesToTake['Assets.xlsx']:    
             Assets.append(a[assetfile][ints][dates])    
         
+        print('ik ga nu de simpleMatrix maken')        
+        
         simpleMatrix = pd.DataFrame(index=sectors.columns, columns=sectors.columns)
         for share in range(len(Shares)):
             for asset in range(len(Assets)):
@@ -76,8 +82,10 @@ mii = pd.MultiIndex.from_tuples(tuples=df.index, names=['date','sector'])
 df2 = pd.DataFrame(df,index=mii,columns=mic)
 
 #%%
+
+print('ik ga nu de inDegrees maken')
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
-threshold = 0.02
+threshold = 0.002
 
 for dates in instruments.index:
     tempDate = df2.loc[dates].transpose().sum(level=[1])
@@ -94,10 +102,11 @@ systemInDegree = pd.DataFrame(columns=['SystemInDegree'],index=instruments.index
 
 for dates in instruments.index:
     systemInDegree.loc[dates,'SystemInDegree'] = inDegree.loc[dates].sum() / amountSec
-
-inDegree.to_excel(wd+'InDegree001.xlsx')
+    
+inDegree.to_excel(wd+'InDegree0_002'+ str(len(Shares)) +'.xlsx')
 
 #%%
+print('ik ga nu de HHI maken')
 hhiIndices = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 
 for dates in instruments.index:
@@ -117,7 +126,4 @@ for dates in instruments.index:
     systemHHI.loc[dates,'SystemHHI'] = hhiIndices.loc[dates].sum() / amountSec
 
 #%%
-inDegree.to_excel(wd+'InDegree10.xlsx')
-hhiIndices.to_excel(wd+'HHI.xlsx')
-
-systemInDegree.to_excel(wd+'sysID2.xlsx')
+hhiIndices.to_excel(wd+'HHI'+ str(len(Shares)) +'.xlsx')
