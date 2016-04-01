@@ -4,7 +4,7 @@ Created on Fri Mar 25 11:36:01 2016
 
 @author: ms
 """
-
+import itertools
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot,style
@@ -28,21 +28,13 @@ dfx = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)[pd.Timestamp(
 dfy = pd.read_excel('leverages.xlsx',index_col=0)[pd.Timestamp('1969-07-01 00:00:00'):pd.Timestamp('2015-07-01 00:00:00')]
 dfz = pd.read_excel('financial stability measures continuous.xlsx',index_col=1).drop('dropme',axis=1)[pd.Timestamp('1969-07-01 00:00:00'):pd.Timestamp('2015-07-01 00:00:00')]
 
-_,dfy_pca,_,_ = pca(dfy,3)
+_,dfy_pca,_,evecs = pca(dfy,3)
 f =  sm.OLS(dfy_pca,dfx,missing='drop').fit() 
 IV = f.fittedvalues
 rem = f.resid
 IV.columns = list(map(lambda x: x+'_IV', IV.columns))
 rem.columns = list(map(lambda x: x+'_resid', rem.columns))
 sep = IV.join(rem)
-
-#%%
-rr=r.copy()
-rr[pd.Timestamp('1993-06-30 00:00:00'):] -= np.mean(rr[pd.Timestamp('1993-06-30 00:00:00'):])-np.mean(rr[:pd.Timestamp('1993-06-30 00:00:00')])
-t = tsa.VAR(r).fit(2, trend='ctt')
-t.roots
-t.fittedvalues.plot()
-rr.plot()
 
 #%%
 
@@ -52,9 +44,9 @@ estims = {}
 #                                'IV':sm.Logit(dfz['NBER RECESSIONS'], sm.add_constant(IV)).fit()}
 # example continuous  
 for col in dfz.columns:
-    estims[col] = {     'direct':sm.OLS(dfz[col], sm.add_constant(sep), missing='drop').fit(), 
-                        'IV':    sm.OLS(dfz[col], sm.add_constant(IV), missing='drop').fit(),
-                        'rem':   sm.OLS(dfz[col], sm.add_constant(rem), missing='drop').fit(),
+    estims[col] = {     'direct':sm.OLS(dfz[col], sm.add_constant(sep), missing='drop').fit().get_robustcov_results(), 
+                        'IV':    sm.OLS(dfz[col], sm.add_constant(IV), missing='drop').fit().get_robustcov_results(),
+                        'rem':   sm.OLS(dfz[col], sm.add_constant(rem), missing='drop').fit().get_robustcov_results(),
                         'VARX-IV':    sm.OLS(dfz[col], sm.add_constant(IV.join(pd.DataFrame(lagmat(dfz[col], maxlag=4),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results(), 
                         'VARX-rem':   sm.OLS(dfz[col], sm.add_constant(rem.join(pd.DataFrame(lagmat(dfz[col], maxlag=4),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results(),
                         'VARX-direct':sm.OLS(dfz[col], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz[col], maxlag=4),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results() }
@@ -76,14 +68,15 @@ for col in dfz.columns:
     lltest('likelihood on iv in var',estims[col]['VARX-rem'],estims[col]['VARX-direct']),
     fresults('f-test on iv in var',estims[col]['VARX-direct'].f_test(np.array([[1,0,0,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0,0,0]])))]))
 
-    with open('results/'+col.replace('/','').replace(':',',')+'.txt','w') as f:
-        # samenvatting van regressies
-        print(estims[col]['IV'].summary(), file=f)
-        print(estims[col]['rem'].summary(), file=f)
-        print(estims[col]['direct'].summary(), file=f)
-        print(estims[col]['VARX-IV'].summary(), file=f)
-        print(estims[col]['VARX-rem'].summary(), file=f)
-        print(estims[col]['VARX-direct'].summary(), file=f)
+    if False:
+        with open('results/'+col.replace('/','').replace(':',',')+'.txt','w') as f:
+            # samenvatting van regressies
+            print(estims[col]['IV'].summary(), file=f)
+            print(estims[col]['rem'].summary(), file=f)
+            print(estims[col]['direct'].summary(), file=f)
+            print(estims[col]['VARX-IV'].summary(), file=f)
+            print(estims[col]['VARX-rem'].summary(), file=f)
+            print(estims[col]['VARX-direct'].summary(), file=f)
         
 pd.DataFrame(tests).to_excel('results/significances of IV leverage interconnectedness stability.xlsx')
 
@@ -102,6 +95,19 @@ with open('results/selected results.txt','w') as f:
     # print(estims['Return on equity: households']['VAR'].summary(), file=f)
     # print(estims['Total debt/equity: nonfin. corp.']['VAR'].summary(), file=f)
     print(estims['VIX']['VARX-IV'].summary(), file=f)
+
+
+pd.DataFrame.from_dict({
+    'BCI OECD':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['BCI OECD']['VARX-direct'].params[0:6].reshape(3,2,order='F') ).reshape(12,order='F'))),
+    'CCI OECD':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['CCI OECD']['VARX-direct'].params[0:6].reshape(3,2,order='F')  ).reshape(12,order='F'))),
+    'Comm. real estate p (y-o-y %ch)':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['Comm. real estate p (y-o-y %ch)']['VARX-IV'].params[0:3] ))),
+    'Debt/gdp':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['Debt/gdp']['VARX-IV'].params[0:3] ))),
+    'Federal funds effective rate':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['Federal funds effective rate']['VARX-IV'].params[0:3] ))),
+    'Financial assets/gdp: nonfin. corp.':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['Financial assets/gdp: nonfin. corp.']['VARX-IV'].params[0:3] ))),
+    'GDP GROWTH':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['GDP GROWTH']['IV'].params[0:3] ))),
+    'Inflation':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['Inflation']['VARX-IV'].params[0:3] ))),
+    'KCFSI':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['KCFSI']['VARX-direct'].params[0:6].reshape(3,2,order='F') ).reshape(12,order='F'))),
+    'VIX':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['VIX']['VARX-IV'].params[0:3] )))   }).to_excel('results/selected results.xlsx') 
 
 
 #%% VISUALS %%
