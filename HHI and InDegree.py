@@ -11,7 +11,7 @@ import numpy as np
 from matplotlib.mlab import PCA
 import os
 
-wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\14-Sectors\\Indices Models\Instruments\\'
+wd = 'C:\\Users\\Beert\\Documents\\SeminarFinance\\Instruments\\'
 
 #%% Initialisation, detemines what data to read.
 
@@ -90,36 +90,37 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 print('ik ga nu de inDegrees maken')
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
-threshold = 0.002
+thresholds = [0.002, 0.005, 0.01, 0.02]
 
-for dates in instruments.index:
-    tempDate = df2.loc[dates].transpose().sum(level=[1])
-    totals = tempDate.sum()
-    amountSec = len(totals)
-    for secprim in totals.index:
-        count = 0
-        for secsec in totals.index:
-            if tempDate.loc[secprim,secsec]/totals[secprim] > threshold and secsec != secprim:
-                count += 1
-        inDegree.loc[dates,secprim] = count / (amountSec - 1)
+for threshold in thresholds:
+    for dates in instruments.index:
+        tempDate = df2.loc[dates].transpose().sum(level=[1])
+        totals = tempDate.sum()
+        amountSec = len(totals)
+        for secprim in totals.index:
+            count = 0
+            for secsec in totals.index:
+                if tempDate.loc[secprim,secsec]/totals[secprim] > threshold and secsec != secprim:
+                    count += 1
+                inDegree.loc[dates,secprim] = count / (amountSec - 1)
+        #SYSTEM
+        #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.    
+        for sec in totals.index:
+            systemInDegreeWA.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
+
+    print('System inDegrees with weights from PCA')    
     #SYSTEM
-    #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.    
-    for sec in totals.index:
-        systemInDegreeWA.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
 
-print('System inDegrees with weights from PCA')    
-#SYSTEM
-
-#calculates the weights based on the first principal component
-matrix = inDegree.as_matrix().astype('float')
-pca = PCA(matrix)
-systemInDegreePCA = pd.DataFrame(matrix*pca.Wt[0]).transpose().sum()
+    #calculates the weights based on the first principal component
+    matrix = inDegree.as_matrix().astype('float')
+    pca = PCA(matrix)
+    systemInDegreePCA = pd.DataFrame(matrix*pca.Wt[0]).transpose().sum()
         
-#Write to Excel
-systemInDegreeWA.to_excel(wd + 'SystemInDegree0_02WA'+ str(len(Shares)) +'.xlsx')
-pd.DataFrame(systemInDegreePCA).to_excel(wd + 'SytemInDegree0_02PCA' + str(len(Shares)) +'.xlsx')
-inDegree.to_excel(wd+'InDegree0_02'+ str(len(Shares)) +'.xlsx')
-
+    #Write to Excel
+    systemInDegreeWA.to_excel(wd + 'SystemInDegreeWA' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
+    pd.DataFrame(systemInDegreePCA).to_excel(wd + 'SytemInDegreePCA' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
+    inDegree.to_excel(wd+'InDegree_'+ str(len(Shares)) +'.xlsx')
+        
 #%% Calculates the HHI interconnectedness measure
 
 print('ik ga nu de HHI maken')
@@ -152,8 +153,7 @@ for dates in instruments.index:
     systemHHI.loc[dates,'SystemHHI'] = hhiIndices.loc[dates].sum() / amountSec
     
 #Write to Excel
-systemHHIWA.to_excel(wd + 'SystemHHIWA'+ str(len(Shares)) +'.xlsx')
-pd.DataFrame(systemHHIPCA).to_excel(wd + 'SystemHHIPCA' + str(len(Shares)) +'.xlsx')
-systemHHI.to_excel(wd + 'SystemHHI' + str(len(Shares)) +'.xlsx')
-hhiIndices.to_excel(wd+'HHI'+ str(len(Shares)) +'.xlsx')
-
+systemHHIWA.to_excel(wd + 'SystemHHIWA_'+ str(len(Shares)) +'.xlsx')
+pd.DataFrame(systemHHIPCA).to_excel(wd + 'SystemHHIPCA_' + str(len(Shares)) +'.xlsx')
+hhiIndices.to_excel(wd+'HHI_'+ str(len(Shares)) +'.xlsx')
+systemHHI.to_excel(wd+'SystemHHI_'+ str(len(Shares)) +'.xlsx')
