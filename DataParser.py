@@ -85,13 +85,12 @@ mic = pd.MultiIndex.from_tuples(tuples=df.columns, names=['instrument','sector']
 mii = pd.MultiIndex.from_tuples(tuples=df.index, names=['date','sector'])
 df2 = pd.DataFrame(df,index=mii,columns=mic)
 
-#%% Calculate the In Degree interconnectedness
+#%% Calculate the In Degree interconnectedness measure
 
 print('ik ga nu de inDegrees maken')
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
-systemInDegreePCA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
-threshold = 0.05
+threshold = 0.002
 
 for dates in instruments.index:
     tempDate = df2.loc[dates].transpose().sum(level=[1])
@@ -112,24 +111,20 @@ print('System inDegrees with weights from PCA')
 #SYSTEM
 
 #calculates the weights based on the first principal component
-#matrix = inDegree.as_matrix().astype('float')
-#pca = PCA(matrix)
-#for sectorindex in pca.Wt[0]:
+matrix = inDegree.as_matrix().astype('float')
+pca = PCA(matrix)
+systemInDegreePCA = pd.DataFrame(matrix*pca.Wt[0]).transpose().sum()
         
-#calculate the system
-#for dates in instruments.index:    
-#    for sec in totals.index:
-#        systemInDegreePCA.loc[dates,'SystemInDegree'] = systemInDegreePCA.loc[dates,'SystemInDegree'] + tempDate  
-    
-
-
 #Write to Excel
-systemInDegreeWA.to_excel(wd + 'SystemInDegree0_02'+ str(len(Shares)) +'.xlsx')
+systemInDegreeWA.to_excel(wd + 'SystemInDegree0_02WA'+ str(len(Shares)) +'.xlsx')
+pd.DataFrame(systemInDegreePCA).to_excel(wd + 'SytemInDegree0_02PCA' + str(len(Shares)) +'.xlsx')
 inDegree.to_excel(wd+'InDegree0_02'+ str(len(Shares)) +'.xlsx')
 
-#%% Calculates the HHI interconnectedness measures
+#%% Calculates the HHI interconnectedness measure
 
 print('ik ga nu de HHI maken')
+systemHHIWA = pd.DataFrame(0,columns=['SystemHHI'],index=instruments.index)
+systemHHI = pd.DataFrame(columns=['SystemHHI'],index=instruments.index)
 hhiIndices = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 
 for dates in instruments.index:
@@ -142,12 +137,23 @@ for dates in instruments.index:
             if secsec != secprim:
                 hhiIndex += tempDate.loc[secprim,secsec]/totals[secprim]
         hhiIndices.loc[dates,secprim] = (hhiIndex - 1/amountSec)/(1-1/amountSec)
+    #SYSTEM
+    #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.    
+    for sec in totals.index:
+        systemHHIWA.loc[dates,'SystemHHI'] = systemHHIWA.loc[dates,'SystemHHI'] + hhiIndices.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
 
-systemHHI = pd.DataFrame(columns=['SystemHHI'],index=instruments.index)
+#SYSTEM
+#calculates the weights based on the first principal component
+matrixhhi = hhiIndices.as_matrix().astype('float')
+pcahhi = PCA(matrixhhi)
+systemHHIPCA  = pd.DataFrame(matrixhhi*pcahhi.Wt[0]).transpose().sum()
 
 for dates in instruments.index:
     systemHHI.loc[dates,'SystemHHI'] = hhiIndices.loc[dates].sum() / amountSec
     
 #Write to Excel
+systemHHIWA.to_excel(wd + 'SystemHHIWA'+ str(len(Shares)) +'.xlsx')
+pd.DataFrame(systemHHIPCA).to_excel(wd + 'SystemHHIPCA' + str(len(Shares)) +'.xlsx')
+systemHHI.to_excel(wd + 'SystemHHI' + str(len(Shares)) +'.xlsx')
 hhiIndices.to_excel(wd+'HHI'+ str(len(Shares)) +'.xlsx')
 
