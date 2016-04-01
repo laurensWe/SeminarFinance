@@ -106,14 +106,17 @@ for threshold in thresholds:
                 inDegree.loc[dates,secprim] = count / (amountSec - 1)
         #SYSTEM
         #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.    
+        totalInDegree = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+        totalInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
         for sec in totals.index:
             systemInDegreeWA.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
             # equaly weighted average for the system estimate        
-            systemInDegree.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]/len(Shares)
+            totalInDegree.loc[dates,'SystemInDegree'] = totalInDegree.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]
+        systemInDegree.loc[dates,'SystemInDegree'] = totalInDegree.loc[dates,'SystemInDegree'] / 14
 
     print('System inDegrees with weights from PCA')    
     #SYSTEM
-
+    
     #calculates the weights based on the first principal component
     matrix = inDegree.as_matrix().astype('float')
     pca = PCA(matrix)
@@ -123,7 +126,7 @@ for threshold in thresholds:
     systemInDegreeWA.to_excel(wd + 'SystemInDegreeWA' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
     systemInDegree.to_excel(wd + 'SystemInDegree' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
     pd.DataFrame(systemInDegreePCA).to_excel(wd + 'SytemInDegreePCA' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
-    inDegree.to_excel(wd+'InDegree_'+ str(len(Shares)) +'.xlsx')
+    inDegree.to_excel(wd+'InDegree'+ str(threshold) + '_' + str(len(Shares)) +'.xlsx')
         
 #%% Calculates the HHI interconnectedness measure
 
