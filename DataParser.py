@@ -7,6 +7,8 @@ En een beetje van Beert
 """
 
 import pandas as pd
+import numpy as np
+from matplotlib.mlab import PCA
 import os
 
 wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\14-Sectors\\Indices Models\Instruments\\'
@@ -88,8 +90,8 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 print('ik ga nu de inDegrees maken')
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
-systemInDegreePCA = pd.DataFrame(columns=['SystemInDegree'],index=instruments.index)
-threshold = 0.02
+systemInDegreePCA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+threshold = 0.05
 
 for dates in instruments.index:
     tempDate = df2.loc[dates].transpose().sum(level=[1])
@@ -102,18 +104,24 @@ for dates in instruments.index:
                 count += 1
         inDegree.loc[dates,secprim] = count / (amountSec - 1)
     #SYSTEM
-    #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.
+    #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.    
     for sec in totals.index:
         systemInDegreeWA.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
-    
-#SYSTEM
-#calculated the system InDegree based on the weights of the first principal component.    
-        
 
-#for dates in instruments.index:
- #   for sec in totals.index:
-        #systemInDegree.loc[dates,'SystemInDegree'] = systemInDegree.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*Shares[]
-        # legacy code: systemInDegree.loc[dates,'SystemInDegree'] = inDegree.loc[dates].sum() / amountSec
+print('System inDegrees with weights from PCA')    
+#SYSTEM
+
+#calculates the weights based on the first principal component
+#matrix = inDegree.as_matrix().astype('float')
+#pca = PCA(matrix)
+#for sectorindex in pca.Wt[0]:
+        
+#calculate the system
+#for dates in instruments.index:    
+#    for sec in totals.index:
+#        systemInDegreePCA.loc[dates,'SystemInDegree'] = systemInDegreePCA.loc[dates,'SystemInDegree'] + tempDate  
+    
+
 
 #Write to Excel
 systemInDegreeWA.to_excel(wd + 'SystemInDegree0_02'+ str(len(Shares)) +'.xlsx')
