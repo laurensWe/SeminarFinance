@@ -12,7 +12,7 @@ from matplotlib import style,pyplot
 from pandas.tools.plotting import autocorrelation_plot
 style.use('ggplot')
 
-wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Resultaten\\HHI en in-degree\\14 sectors\\'
+wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Laurens\\Figures\\'
 
 #%% Thick lines for the system 
 
@@ -27,6 +27,38 @@ sytemIn = pd.read_excel(wd + "SytemInDegree0_02PCA14.xlsx").plot(ax=ax, linewidt
 leverage14Sectors = pd.read_excel(wd + "leverage14_sectors.xlsx")
 leverage14Sectors = leverage14Sectors.set_index(leverage14Sectors.Time)
 leverage14Sectors.plot(subplots=True, layout=(4,4)) 
+
+#%% The dataseries plot has been formatted in such a way that it can be interpreted with only black ink.
+# initialisation
+interconmeasures = pd.read_excel(wd + "InterconMeas.xlsx")  
+R0 = pd.read_excel(wd + "R0s.xlsx")   
+interconmeasures = interconmeasures.set_index(interconmeasures.Date)
+R0 = R0.set_index(R0.Date)          
+markers1 = ['-v','-p','-s','-*', '-^']
+ax = interconmeasures.plot(style=markers1, color='grey')
+markers2 = ['-o']
+ax2 = R0.plot(secondary_y=True,ax=ax,linewidth=4.0, style=markers2, color='black')
+h1,l1 = ax.get_legend_handles_labels()
+h2, l2 = ax2.get_legend_handles_labels()
+pyplot.legend(h1+h2, l1, loc=2)
+
+
+#pyplot.legend(loc=0, prop={'size':11})
+#legend(loc=0, prop={'size':11})
+
+#ax = NBERcrisis.plot(kind='area', color='m')
+#pd.DataFrame(pca_analyse.Y).plot(secondary_y=True, ax=ax)
+
+#voorbeeld om een reeks kleurtjes en markers mee te geven: 
+#colors=['0.2', '0.3', '0.4', '0.5', '0.6', '0.7']
+#markers = [ '-o', '--', '-v', ':', '-s', '-*']
+#data.plot(style=markers, color=colors)
+
+#voorbeeld om legenda naast plaatje te doen met bepaald lettertype: 
+#ax.legend(bbox_to_anchor=(1.2, 1.0), prop={'size':20})
+
+
+
 
 #%% adjusted y-axis
 
