@@ -19,9 +19,13 @@ wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Resultaten\\HHI en in-d
 # initialisation
 ax = pyplot.subplot()
 
-indiIn = pd.read_excel(wd + "HHI14_ding.xlsx").plot(ax=ax, linewidth = .5)
-sytemIn = pd.read_excel(wd + "HHIsystem_ding.xlsx").plot(ax=ax, linewidth = 4.0, color='black')
+indiIn = pd.read_excel(wd + "InDegree0_0214.xlsx").plot(ax=ax, linewidth = .5)
+sytemIn = pd.read_excel(wd + "SystemInDegree0_0214.xlsx").plot(ax=ax, linewidth = 4.0, color='black')
 
+
+#%% individual lines from an excel file
+leverage14Sectors = pd.read_excel(wd + "leverage14_minus6_sectors.xlsx")
+pd.read_excel(wd + "leverage14_minus6_sectors.xlsx").plot(subplots=True, layout=(3,3))
 
 #%% adjusted y-axis
 
