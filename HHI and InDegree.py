@@ -90,6 +90,7 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 print('ik ga nu de inDegrees maken')
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+systemInDegree = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
 thresholds = [0.002, 0.005, 0.01, 0.02]
 
 for threshold in thresholds:
@@ -107,6 +108,8 @@ for threshold in thresholds:
         #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.    
         for sec in totals.index:
             systemInDegreeWA.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
+            # equaly weighted average for the system estimate        
+            systemInDegree.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]/len(Shares)
 
     print('System inDegrees with weights from PCA')    
     #SYSTEM
@@ -118,6 +121,7 @@ for threshold in thresholds:
         
     #Write to Excel
     systemInDegreeWA.to_excel(wd + 'SystemInDegreeWA' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
+    systemInDegree.to_excel(wd + 'SystemInDegree' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
     pd.DataFrame(systemInDegreePCA).to_excel(wd + 'SytemInDegreePCA' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
     inDegree.to_excel(wd+'InDegree_'+ str(len(Shares)) +'.xlsx')
         

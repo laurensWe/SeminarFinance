@@ -25,8 +25,8 @@ sytemIn = pd.read_excel(wd + "SytemInDegree0_02PCA14.xlsx").plot(ax=ax, linewidt
 
 #%% individual lines from an excel file
 leverage14Sectors = pd.read_excel(wd + "leverage14_sectors.xlsx")
-leverage14Sectors.set_index(leverage14Sectors.Time)
-leverage14Sectors.plot(index = dates,subplots=True, layout=(4,4)) 
+leverage14Sectors = leverage14Sectors.set_index(leverage14Sectors.Time)
+leverage14Sectors.plot(subplots=True, layout=(4,4)) 
 
 #%% adjusted y-axis
 
