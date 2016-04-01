@@ -11,7 +11,7 @@ import numpy as np
 from matplotlib.mlab import PCA
 import os
 
-wd = 'C:\\Users\\Beert\\Documents\\SeminarFinance\\Instruments\\'
+wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\6-Sectors\\Indices-Models\\PerSector\\'
 
 #%% Initialisation, detemines what data to read.
 
@@ -88,12 +88,12 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 #%% Calculate the In Degree interconnectedness measure
 
 print('ik ga nu de inDegrees maken')
-inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
-systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
-systemInDegree = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
 thresholds = [0.002, 0.005, 0.01, 0.02]
 
 for threshold in thresholds:
+    systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+    systemInDegree = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+    inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
     for dates in instruments.index:
         tempDate = df2.loc[dates].transpose().sum(level=[1])
         totals = tempDate.sum()
@@ -112,7 +112,7 @@ for threshold in thresholds:
             systemInDegreeWA.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
             # equaly weighted average for the system estimate        
             totalInDegree.loc[dates,'SystemInDegree'] = totalInDegree.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]
-        systemInDegree.loc[dates,'SystemInDegree'] = totalInDegree.loc[dates,'SystemInDegree'] / 14
+        systemInDegree.loc[dates,'SystemInDegree'] = totalInDegree.loc[dates,'SystemInDegree'] / len(Shares)
 
     print('System inDegrees with weights from PCA')    
     #SYSTEM
