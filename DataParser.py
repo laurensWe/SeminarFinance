@@ -9,9 +9,10 @@ En een beetje van Beert
 import pandas as pd
 import os
 
-wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\6-Sectors\\Indices-Models\\PerSector\\'
+wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\14-Sectors\\Indices Models\Instruments\\'
 
-#%%
+#%% Initialisation, detemines what data to read.
+
 dataframes = {}
 for dirpath,dirnames,filenames in os.walk(wd):
     for filename in filenames:
@@ -24,10 +25,10 @@ instruments = pd.read_excel(wd + "_Instruments.xlsx")
 filesToTake = pd.read_excel(wd + "_FilesToTake.xlsx")
 sectors = pd.read_excel(wd + "_Sectors.xlsx")
 
-#%%
 assetNames = filesToTake['Assets.xlsx']
 
-#%%
+#%% Calculates the shares of all the sectors and their instruments over time
+
 horizontalTuples = []
 verticalTuples = []
 for ints in instruments.columns:
@@ -41,11 +42,16 @@ for dates in instruments.index:
 Total = pd.DataFrame(0, index=instruments.index, columns=instruments.columns)
 for assetfile in filesToTake['Assets.xlsx']:
     Total = Total + pd.read_excel(wd+assetfile, index_col = 0)
+    print(assetfile + ': ' + str(len(Total.columns)))
+        
+    # Debug print line    
+    if len(pd.read_excel(wd+assetfile, index_col = 0).columns) != 28:
+        print(assetfile)
 
 for i in range(Total.shape[0]):
     for j in range(Total.shape[1]):
         if Total.iloc[i,j] == 0:
-            Total.iloc[i,j] = float('Inf')
+            Total.iloc[i,j] = float('inf')
 
 for i in filesToTake.index:
     zero = pd.DataFrame(0, index=instruments.index, columns=instruments.columns)
@@ -63,6 +69,8 @@ for dates in instruments.index:
         for assetfile in filesToTake['Assets.xlsx']:    
             Assets.append(a[assetfile][ints][dates])    
         
+        print('ik ga nu de simpleMatrix maken')        
+        
         simpleMatrix = pd.DataFrame(index=sectors.columns, columns=sectors.columns)
         for share in range(len(Shares)):
             for asset in range(len(Assets)):
@@ -75,8 +83,12 @@ mic = pd.MultiIndex.from_tuples(tuples=df.columns, names=['instrument','sector']
 mii = pd.MultiIndex.from_tuples(tuples=df.index, names=['date','sector'])
 df2 = pd.DataFrame(df,index=mii,columns=mic)
 
-#%%
+#%% Calculate the In Degree interconnectedness
+
+print('ik ga nu de inDegrees maken')
 inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
+systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+systemInDegreePCA = pd.DataFrame(columns=['SystemInDegree'],index=instruments.index)
 threshold = 0.02
 
 for dates in instruments.index:
@@ -89,15 +101,27 @@ for dates in instruments.index:
             if tempDate.loc[secprim,secsec]/totals[secprim] > threshold and secsec != secprim:
                 count += 1
         inDegree.loc[dates,secprim] = count / (amountSec - 1)
+    #SYSTEM
+    #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.
+    for sec in totals.index:
+        systemInDegreeWA.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
+    
+#SYSTEM
+#calculated the system InDegree based on the weights of the first principal component.    
+        
 
-systemInDegree = pd.DataFrame(columns=['SystemInDegree'],index=instruments.index)
+#for dates in instruments.index:
+ #   for sec in totals.index:
+        #systemInDegree.loc[dates,'SystemInDegree'] = systemInDegree.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*Shares[]
+        # legacy code: systemInDegree.loc[dates,'SystemInDegree'] = inDegree.loc[dates].sum() / amountSec
 
-for dates in instruments.index:
-    systemInDegree.loc[dates,'SystemInDegree'] = inDegree.loc[dates].sum() / amountSec
+#Write to Excel
+systemInDegreeWA.to_excel(wd + 'SystemInDegree0_02'+ str(len(Shares)) +'.xlsx')
+inDegree.to_excel(wd+'InDegree0_02'+ str(len(Shares)) +'.xlsx')
 
-inDegree.to_excel(wd+'InDegree001.xlsx')
+#%% Calculates the HHI interconnectedness measures
 
-#%%
+print('ik ga nu de HHI maken')
 hhiIndices = pd.DataFrame(index=instruments.index, columns=sectors.columns)
 
 for dates in instruments.index:
@@ -115,9 +139,7 @@ systemHHI = pd.DataFrame(columns=['SystemHHI'],index=instruments.index)
 
 for dates in instruments.index:
     systemHHI.loc[dates,'SystemHHI'] = hhiIndices.loc[dates].sum() / amountSec
+    
+#Write to Excel
+hhiIndices.to_excel(wd+'HHI'+ str(len(Shares)) +'.xlsx')
 
-#%%
-inDegree.to_excel(wd+'InDegree10.xlsx')
-hhiIndices.to_excel(wd+'HHI.xlsx')
-
-systemInDegree.to_excel(wd+'sysID2.xlsx')
