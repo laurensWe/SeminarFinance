@@ -128,7 +128,7 @@ def test_geom_estimator():
     pyplot.show()
     return p_
 
-def printout(arr,n_dec=6,newline='\n',delimiter=' '):
+def printout(arr,n_dec=0,newline='\n',delimiter=' & '):
     """
     This function is a convenience to view arrays and make them easier to be copy-
     pasted in Excel/Word files for reporting.

@@ -17,10 +17,13 @@ import statsmodels.tsa.api as tsa
 from pandas.tools.plotting import autocorrelation_plot
 style.use('ggplot')
 
-def lltest(model0,modelA):
+def lltest(key,model0,modelA):
     stat = 2*(modelA.llf - model0.llf)
-    return stat, 1-chi2.cdf(stat, modelA.df_model-model0.df_model )
-
+    return {(key,'stat'):round(stat,4), (key,'prob'):round(1-chi2.cdf(stat, modelA.df_model-model0.df_model),4)}
+    
+def fresults(key,f_test):
+    return {(key,'stat'):round(float(f_test.fvalue),4), (key,'prob'):round(float(f_test.pvalue),4)}
+    
 dfx = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)[pd.Timestamp('1969-07-01 00:00:00'):pd.Timestamp('2015-07-01 00:00:00')]
 dfy = pd.read_excel('leverages.xlsx',index_col=0)[pd.Timestamp('1969-07-01 00:00:00'):pd.Timestamp('2015-07-01 00:00:00')]
 dfz = pd.read_excel('financial stability measures continuous.xlsx',index_col=1).drop('dropme',axis=1)[pd.Timestamp('1969-07-01 00:00:00'):pd.Timestamp('2015-07-01 00:00:00')]
@@ -33,7 +36,15 @@ IV.columns = list(map(lambda x: x+'_IV', IV.columns))
 rem.columns = list(map(lambda x: x+'_resid', rem.columns))
 sep = IV.join(rem)
 
+#%%
+rr=r.copy()
+rr[pd.Timestamp('1993-06-30 00:00:00'):] -= np.mean(rr[pd.Timestamp('1993-06-30 00:00:00'):])-np.mean(rr[:pd.Timestamp('1993-06-30 00:00:00')])
+t = tsa.VAR(r).fit(2, trend='ctt')
+t.roots
+t.fittedvalues.plot()
+rr.plot()
 
+#%%
 
 estims = {}
 # example categorical
@@ -44,33 +55,28 @@ for col in dfz.columns:
     estims[col] = {     'direct':sm.OLS(dfz[col], sm.add_constant(sep), missing='drop').fit(), 
                         'IV':    sm.OLS(dfz[col], sm.add_constant(IV), missing='drop').fit(),
                         'rem':   sm.OLS(dfz[col], sm.add_constant(rem), missing='drop').fit(),
-                        'VARX-IV':    sm.OLS(dfz[col], sm.add_constant(IV.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index))), missing='drop').fit(),
-                        'VARX-rem':   sm.OLS(dfz[col], sm.add_constant(rem.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index))), missing='drop').fit(),
-                        'VARX-direct':sm.OLS(dfz[col], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz[col], maxlag=2),columns=['lag_0','lag_1'], index=dfz.index))), missing='drop').fit() }
+                        'VARX-IV':    sm.OLS(dfz[col], sm.add_constant(IV.join(pd.DataFrame(lagmat(dfz[col], maxlag=4),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results(), 
+                        'VARX-rem':   sm.OLS(dfz[col], sm.add_constant(rem.join(pd.DataFrame(lagmat(dfz[col], maxlag=4),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results(),
+                        'VARX-direct':sm.OLS(dfz[col], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz[col], maxlag=4),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results() }
 
+#%% OUTPUT
+def returndict(x):
+    return {}
+tests = dict(zip(dfz.columns, [{} for _ in dfz.columns]))
 for col in dfz.columns:
-    with open('results/'+col.replace('/','')+'.txt','w') as f:
-        # significantie van parameters
-        print('\n\t\tsignificance of lags', file=f)
-        print('likelihood ratio:',lltest(estims[col]['direct'],estims[col]['VARX-direct']), file=f)
-        print('F-test:',estims[col]['direct'].f_test(np.array([[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])), file=f)
-        
-        # significantie van parameters
-        print('\n\t\tsignificance of residuals in regular OLS', file=f)
-        print('likelihood ratio:',lltest(estims[col]['IV'],estims[col]['direct']), file=f)
-        print('F-test:',estims[col]['direct'].f_test(np.array([[0,0,0,0,1,0,0],[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])), file=f)
-        print('\n\t\tsignificance of residuals in VAR-X', file=f)
-        print('likelihood ratio:', lltest(estims[col]['VARX-IV'],estims[col]['VARX-direct']), file=f)
-        print('F-test:', estims[col]['VARX-direct'].f_test(np.array([[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0,0]])), file=f)
-        
-        # significantie van parameters
-        print('\n\t\tsignificance of IV in regular OLS', file=f)
-        print('likelihood ratio:', lltest(estims[col]['rem'],estims[col]['direct']), file=f)
-        print('F-test:', estims[col]['direct'].f_test(np.array([[1,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,1,0,0,0,0]])), file=f)
-        print('\n\t\tsignificance of IV in VAR-X', file=f)
-        print('likelihood ratio:', lltest(estims[col]['VARX-rem'],estims[col]['VARX-direct']), file=f)
-        print('F-test:', estims[col]['VARX-direct'].f_test(np.array([[1,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0]])), file=f)
+    list(map(tests[col].update,[
+    lltest('likelihood on lags',estims[col]['direct'],estims[col]['VARX-direct']),
+    fresults('f-test on lags',estims[col]['VARX-direct'].f_test(np.array([[0,0,0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,0,0,1,0],[0,0,0,0,0,0,0,0,0,0,1]]))),
+    lltest('likelihood on residuals in ols',estims[col]['IV'],estims[col]['direct']),
+    fresults('f-test on residuals in ols',estims[col]['direct'].f_test(np.array([[0,0,0,0,1,0,0],[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]]))),
+    lltest('likelihood on residuals in var',estims[col]['VARX-IV'],estims[col]['VARX-direct']),
+    fresults('f-test on residuals in var',estims[col]['VARX-direct'].f_test(np.array([[0,0,0,0,1,0,0,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,1,0,0,0,0]]))),
+    lltest('likelihood on iv in ols',estims[col]['rem'],estims[col]['direct']),
+    fresults('f-test on iv in ols',estims[col]['direct'].f_test(np.array([[1,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,1,0,0,0,0]]))),
+    lltest('likelihood on iv in var',estims[col]['VARX-rem'],estims[col]['VARX-direct']),
+    fresults('f-test on iv in var',estims[col]['VARX-direct'].f_test(np.array([[1,0,0,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0,0,0]])))]))
 
+    with open('results/'+col.replace('/','').replace(':',',')+'.txt','w') as f:
         # samenvatting van regressies
         print(estims[col]['IV'].summary(), file=f)
         print(estims[col]['rem'].summary(), file=f)
@@ -79,6 +85,24 @@ for col in dfz.columns:
         print(estims[col]['VARX-rem'].summary(), file=f)
         print(estims[col]['VARX-direct'].summary(), file=f)
         
+pd.DataFrame(tests).to_excel('results/significances of IV leverage interconnectedness stability.xlsx')
+
+#%% SELECTION %%
+with open('results/selected results.txt','w') as f:
+    print(estims['BCI OECD']['VARX-direct'].summary(), file=f)
+    print(estims['CCI OECD']['VARX-direct'].summary(), file=f)
+    print(estims['Comm. real estate p (y-o-y %ch)']['VARX-IV'].summary(), file=f)
+    print(estims['Debt/gdp']['VARX-IV'].summary(), file=f)
+    print(estims['Federal funds effective rate']['VARX-IV'].summary(), file=f)
+    print(estims['Financial assets/gdp: nonfin. corp.']['VARX-IV'].summary(), file=f)
+    # print(estims['Financial assets/total financial assets: other fin. corp.']['VAR'].summary(), file=f)
+    print(estims['GDP GROWTH']['IV'].summary(), file=f)
+    print(estims['Inflation']['VARX-IV'].summary(), file=f)
+    print(estims['KCFSI']['VARX-direct'].summary(), file=f)
+    # print(estims['Return on equity: households']['VAR'].summary(), file=f)
+    # print(estims['Total debt/equity: nonfin. corp.']['VAR'].summary(), file=f)
+    print(estims['VIX']['VARX-IV'].summary(), file=f)
+
 
 #%% VISUALS %%
 if False:
@@ -107,3 +131,28 @@ if False:
     tsa.AR(dfz['GDP Growth Rate']).fit(2).fittedvalues.plot(ax=ax,label='AR fitted values')
     sm.OLS(dfz['GDP Growth Rate'], X).fit().fittedvalues.plot(ax=ax,label='ARX(IV) fitted values')
     ax.legend()
+    
+for col in dfz.columns:
+    pyplot.clf()
+    ax = pyplot.subplot()
+    estims[col]['direct'].resid.plot(ax=ax,label='direct')
+    estims[col]['IV'].resid.plot(ax=ax,label='IV')
+    estims[col]['rem'].resid.plot(ax=ax,label='rem' )
+    pyplot.title(col)
+    pyplot.legend()
+    pyplot.savefig(col.replace('/','-').replace(':',',')+'.png')
+    pyplot.clf()
+    ax = pyplot.subplot()
+    
+    # TODO deze indexen de goeie lengte maken, oordelen op heteroscedasticiteit enz.
+    ax.plot(dfz.index, estims[col]['VARX-direct'].resid, label='VARX-direct')
+    ax.plot(dfz.index, estims[col]['VARX-IV'].resid, label='VARX-IV')
+    ax.plot(dfz.index, estims[col]['VARX-rem'].resid, label='VARX-rem' )
+    pyplot.title(col)
+    pyplot.legend()
+    pyplot.savefig(col.replace('/','-').replace(':',',')+'-VARX.png')
+    
+    
+    
+    
+    

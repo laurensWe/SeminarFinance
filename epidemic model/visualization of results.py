@@ -21,6 +21,7 @@ def diff(df,order=1):
 
 df = pd.read_excel('crisisPerSector.xlsx',index_col=0,converters={i:bool for i in range(1,7)})
 df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
+dfnber = pd.read_excel('nber.xlsx',index_col=0,converters={1:bool})
 
 mean = np.load('mean for windowsize '+str(ws)+'.npy')
 var = np.load('variance for windowsize '+str(ws)+'.npy')
@@ -126,7 +127,8 @@ ax = plt.subplot()
 color = ['red','green', 'blue','yellow','purple','magenta']
 for i in range(6):
     col = df.columns[i]
-    ax.eventplot(positions=df.index[df[col]], lineoffsets=i, linewidths=1.4, color=['darkgrey'])#[color[i]])
+    ax.eventplot(positions=df.index[df[col]], lineoffsets=i, linewidths=1.4, color=['black'],alpha=.5)#[color[i]])
+ax.eventplot(positions=dfnber.index[dfnber['NBER_RECESSIONS']], lineoffsets=2.5,linelengths=6, linewidths=1.4, color=['red'],alpha=.5)#[color[i]])
 ax.set_ylim([-.5,5.5])
 ax.set_yticks(list(range(6)))
 ax.set_yticklabels(df.columns)
