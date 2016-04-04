@@ -17,7 +17,7 @@ df = pd.read_excel('crisisPerSector.xlsx',index_col=0,converters={i:bool for i i
 df.index = pd.date_range(start='1-1-1952', end='30-09-2015', freq='Q')
 nprocs =1
 n_iter = 1e7
-window_size = 70
+window_size = 100
 
 def upload(fname):
     ftp = FTP_TLS('ftp.servage.net', '3zesp91tTNBV8', 'sbI3cEyWY6pMy8')

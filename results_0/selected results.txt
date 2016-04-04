@@ -1,0 +1,326 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               BCI OECD   R-squared:                       0.917
+Model:                            OLS   Adj. R-squared:                  0.912
+Method:                 Least Squares   F-statistic:                     290.5
+Date:                Fri, 01 Apr 2016   Prob (F-statistic):           1.12e-93
+Time:                        15:26:40   Log-Likelihood:                -101.59
+No. Observations:                 163   AIC:                             225.2
+Df Residuals:                     152   BIC:                             259.2
+Df Model:                          10                                         
+Covariance Type:                  HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         12.5811      2.686      4.684      0.000         7.275    17.887
+y1_IV          0.0451      0.071      0.635      0.527        -0.095     0.186
+y2_IV          0.2061      0.217      0.951      0.343        -0.222     0.634
+y3_IV          0.3968      0.914      0.434      0.665        -1.410     2.203
+y1_resid      -0.1025      0.385     -0.266      0.790        -0.863     0.658
+y2_resid      -0.3403      0.365     -0.932      0.353        -1.062     0.381
+y3_resid       1.9135      0.896      2.136      0.034         0.143     3.684
+lag_1          1.5638      0.075     20.990      0.000         1.417     1.711
+lag_2         -1.0929      0.138     -7.909      0.000        -1.366    -0.820
+lag_3          0.8547      0.156      5.474      0.000         0.546     1.163
+lag_4         -0.4518      0.086     -5.267      0.000        -0.621    -0.282
+==============================================================================
+Omnibus:                       69.648   Durbin-Watson:                   1.803
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              376.864
+Skew:                          -1.464   Prob(JB):                     1.46e-82
+Kurtosis:                       9.849   Cond. No.                     1.62e+04
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+[2] The condition number is large, 1.62e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               CCI OECD   R-squared:                       0.914
+Model:                            OLS   Adj. R-squared:                  0.908
+Method:                 Least Squares   F-statistic:                     177.2
+Date:                Fri, 01 Apr 2016   Prob (F-statistic):           9.09e-78
+Time:                        15:26:40   Log-Likelihood:                -22.780
+No. Observations:                 161   AIC:                             67.56
+Df Residuals:                     150   BIC:                             101.5
+Df Model:                          10                                         
+Covariance Type:                  HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         24.0979      4.275      5.637      0.000        15.651    32.544
+y1_IV          0.0294      0.050      0.589      0.557        -0.069     0.128
+y2_IV          0.8600      0.162      5.311      0.000         0.540     1.180
+y3_IV         -0.1276      0.384     -0.332      0.740        -0.886     0.631
+y1_resid      -0.3453      0.221     -1.562      0.120        -0.782     0.092
+y2_resid      -0.2001      0.176     -1.135      0.258        -0.549     0.148
+y3_resid      -0.4100      0.522     -0.785      0.434        -1.442     0.622
+lag_1          1.1438      0.073     15.759      0.000         1.000     1.287
+lag_2         -0.4941      0.135     -3.653      0.000        -0.761    -0.227
+lag_3          0.3381      0.131      2.582      0.011         0.079     0.597
+lag_4         -0.2285      0.078     -2.918      0.004        -0.383    -0.074
+==============================================================================
+Omnibus:                       10.805   Durbin-Watson:                   2.038
+Prob(Omnibus):                  0.005   Jarque-Bera (JB):               16.628
+Skew:                          -0.355   Prob(JB):                     0.000245
+Kurtosis:                       4.405   Cond. No.                     3.30e+04
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+[2] The condition number is large, 3.3e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.
+                                   OLS Regression Results                                  
+===========================================================================================
+Dep. Variable:     Comm. real estate p (y-o-y %ch)   R-squared:                       0.850
+Model:                                         OLS   Adj. R-squared:                  0.842
+Method:                              Least Squares   F-statistic:                     45.80
+Date:                             Fri, 01 Apr 2016   Prob (F-statistic):           1.38e-43
+Time:                                     15:26:40   Log-Likelihood:                -481.80
+No. Observations:                              185   AIC:                             985.6
+Df Residuals:                                  174   BIC:                             1021.
+Df Model:                                       10                                         
+Covariance Type:                               HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          1.2247      0.420      2.919      0.004         0.396     2.053
+y1_IV          0.4811      0.512      0.939      0.349        -0.530     1.492
+y2_IV          0.8423      1.606      0.524      0.601        -2.328     4.013
+y3_IV         -6.4669      4.337     -1.491      0.138       -15.027     2.094
+y1_resid       3.8204      1.867      2.046      0.042         0.135     7.506
+y2_resid      -1.7393      2.278     -0.764      0.446        -6.235     2.756
+y3_resid     -15.7142      4.813     -3.265      0.001       -25.213    -6.215
+lag_1          1.1409      0.112     10.185      0.000         0.920     1.362
+lag_2         -0.2707      0.173     -1.565      0.119        -0.612     0.071
+lag_3         -0.0017      0.224     -0.008      0.994        -0.444     0.440
+lag_4         -0.0981      0.137     -0.716      0.475        -0.368     0.172
+==============================================================================
+Omnibus:                       25.908   Durbin-Watson:                   1.895
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              156.266
+Skew:                           0.004   Prob(JB):                     1.17e-34
+Kurtosis:                       7.502   Cond. No.                         415.
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               Debt/gdp   R-squared:                       0.972
+Model:                            OLS   Adj. R-squared:                  0.971
+Method:                 Least Squares   F-statistic:                     4226.
+Date:                Fri, 01 Apr 2016   Prob (F-statistic):          2.44e-193
+Time:                        15:26:40   Log-Likelihood:                -462.60
+No. Observations:                 185   AIC:                             941.2
+Df Residuals:                     177   BIC:                             967.0
+Df Model:                           7                                         
+Covariance Type:                  HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         13.8854     11.414      1.217      0.225        -8.640    36.411
+y1_IV         -6.3240      5.340     -1.184      0.238       -16.862     4.214
+y2_IV         -2.9608      3.746     -0.790      0.430       -10.354     4.432
+y3_IV          4.6146      3.022      1.527      0.129        -1.349    10.578
+lag_1          0.8314      0.171      4.854      0.000         0.493     1.169
+lag_2         -0.0371      0.048     -0.773      0.441        -0.132     0.058
+lag_3          0.0102      0.053      0.192      0.848        -0.095     0.115
+lag_4         -0.0166      0.036     -0.465      0.642        -0.087     0.054
+==============================================================================
+Omnibus:                      323.657   Durbin-Watson:                   0.879
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):            73459.316
+Skew:                           8.590   Prob(JB):                         0.00
+Kurtosis:                      99.097   Cond. No.                     2.56e+03
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+[2] The condition number is large, 2.56e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+                                 OLS Regression Results                                 
+========================================================================================
+Dep. Variable:     Federal funds effective rate   R-squared:                       0.881
+Model:                                      OLS   Adj. R-squared:                  0.876
+Method:                           Least Squares   F-statistic:                     256.1
+Date:                          Fri, 01 Apr 2016   Prob (F-statistic):           4.50e-89
+Time:                                  15:26:40   Log-Likelihood:                -317.35
+No. Observations:                           185   AIC:                             650.7
+Df Residuals:                               177   BIC:                             676.5
+Df Model:                                     7                                         
+Covariance Type:                            HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.9972      0.437      2.281      0.024         0.134     1.860
+y1_IV          1.0686      0.453      2.361      0.019         0.175     1.962
+y2_IV          1.1559      0.554      2.088      0.038         0.063     2.249
+y3_IV         -1.2766      1.475     -0.866      0.388        -4.186     1.633
+lag_1          0.7961      0.125      6.378      0.000         0.550     1.042
+lag_2         -0.0707      0.239     -0.295      0.768        -0.543     0.402
+lag_3          0.3052      0.236      1.291      0.198        -0.161     0.772
+lag_4         -0.2102      0.104     -2.012      0.046        -0.416    -0.004
+==============================================================================
+Omnibus:                      100.633   Durbin-Watson:                   1.726
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1300.764
+Skew:                           1.681   Prob(JB):                    3.49e-283
+Kurtosis:                      15.548   Cond. No.                         237.
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+                                     OLS Regression Results                                    
+===============================================================================================
+Dep. Variable:     Financial assets/gdp: nonfin. corp.   R-squared:                       0.995
+Model:                                             OLS   Adj. R-squared:                  0.995
+Method:                                  Least Squares   F-statistic:                 1.398e+04
+Date:                                 Fri, 01 Apr 2016   Prob (F-statistic):          3.80e-239
+Time:                                         15:26:40   Log-Likelihood:                -630.55
+No. Observations:                                  185   AIC:                             1277.
+Df Residuals:                                      177   BIC:                             1303.
+Df Model:                                            7                                         
+Covariance Type:                                   HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         13.3166      8.218      1.620      0.107        -2.902    29.535
+y1_IV         -9.8402      5.986     -1.644      0.102       -21.654     1.974
+y2_IV         -0.5874      4.936     -0.119      0.905       -10.328     9.153
+y3_IV        -12.3155     15.478     -0.796      0.427       -42.861    18.230
+lag_1          0.9485      0.072     13.102      0.000         0.806     1.091
+lag_2         -0.0352      0.040     -0.884      0.378        -0.114     0.043
+lag_3         -0.0164      0.040     -0.411      0.681        -0.095     0.062
+lag_4          0.0493      0.037      1.326      0.186        -0.024     0.123
+==============================================================================
+Omnibus:                      309.037   Durbin-Watson:                   1.175
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):            60310.708
+Skew:                           7.885   Prob(JB):                         0.00
+Kurtosis:                      90.037   Cond. No.                     8.02e+03
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+[2] The condition number is large, 8.02e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:             GDP GROWTH   R-squared:                       0.340
+Model:                            OLS   Adj. R-squared:                  0.329
+Method:                 Least Squares   F-statistic:                     26.83
+Date:                Fri, 01 Apr 2016   Prob (F-statistic):           2.11e-14
+Time:                        15:26:40   Log-Likelihood:                 630.58
+No. Observations:                 185   AIC:                            -1253.
+Df Residuals:                     181   BIC:                            -1240.
+Df Model:                           3                                         
+Covariance Type:                  HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.0158      0.001     26.464      0.000         0.015     0.017
+y1_IV          0.0110      0.001      8.644      0.000         0.009     0.014
+y2_IV          0.0055      0.003      1.945      0.053     -7.81e-05     0.011
+y3_IV         -0.0122      0.010     -1.259      0.210        -0.031     0.007
+==============================================================================
+Omnibus:                       18.418   Durbin-Watson:                   1.559
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               58.389
+Skew:                           0.247   Prob(JB):                     2.09e-13
+Kurtosis:                       5.707   Cond. No.                         16.9
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Inflation   R-squared:                       0.932
+Model:                            OLS   Adj. R-squared:                  0.929
+Method:                 Least Squares   F-statistic:                     290.5
+Date:                Fri, 01 Apr 2016   Prob (F-statistic):           1.74e-93
+Time:                        15:26:40   Log-Likelihood:                -216.08
+No. Observations:                 185   AIC:                             448.2
+Df Residuals:                     177   BIC:                             473.9
+Df Model:                           7                                         
+Covariance Type:                  HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          0.6180      0.230      2.686      0.008         0.164     1.072
+y1_IV          0.6390      0.259      2.468      0.015         0.128     1.150
+y2_IV          0.0745      0.311      0.240      0.811        -0.539     0.688
+y3_IV         -0.7187      1.138     -0.632      0.528        -2.964     1.527
+lag_1          1.1688      0.103     11.381      0.000         0.966     1.371
+lag_2         -0.2586      0.129     -2.000      0.047        -0.514    -0.003
+lag_3          0.0923      0.109      0.847      0.398        -0.123     0.307
+lag_4         -0.1491      0.078     -1.915      0.057        -0.303     0.005
+==============================================================================
+Omnibus:                       68.482   Durbin-Watson:                   1.651
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              528.120
+Skew:                           1.140   Prob(JB):                    2.09e-115
+Kurtosis:                      10.957   Cond. No.                         175.
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  KCFSI   R-squared:                       0.788
+Model:                            OLS   Adj. R-squared:                  0.762
+Method:                 Least Squares   F-statistic:                     20.02
+Date:                Fri, 01 Apr 2016   Prob (F-statistic):           3.89e-18
+Time:                        15:26:40   Log-Likelihood:                -57.854
+No. Observations:                  93   AIC:                             137.7
+Df Residuals:                      82   BIC:                             165.6
+Df Model:                          10                                         
+Covariance Type:                  HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const         -0.5084      0.177     -2.873      0.005        -0.860    -0.156
+y1_IV         -1.0516      0.399     -2.633      0.010        -1.846    -0.257
+y2_IV          0.6590      0.270      2.441      0.017         0.122     1.196
+y3_IV          2.4802      1.017      2.439      0.017         0.457     4.503
+y1_resid      -1.8696      0.739     -2.531      0.013        -3.339    -0.400
+y2_resid       0.7170      0.386      1.858      0.067        -0.051     1.485
+y3_resid       3.7062      1.525      2.431      0.017         0.673     6.739
+lag_1          1.0223      0.184      5.557      0.000         0.656     1.388
+lag_2         -0.4462      0.315     -1.418      0.160        -1.072     0.180
+lag_3          0.2075      0.202      1.026      0.308        -0.195     0.609
+lag_4         -0.1740      0.119     -1.461      0.148        -0.411     0.063
+==============================================================================
+Omnibus:                       31.056   Durbin-Watson:                   1.946
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               91.814
+Skew:                           1.081   Prob(JB):                     1.16e-20
+Kurtosis:                       7.362   Cond. No.                         59.2
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                    VIX   R-squared:                       0.405
+Model:                            OLS   Adj. R-squared:                  0.359
+Method:                 Least Squares   F-statistic:                     8.441
+Date:                Fri, 01 Apr 2016   Prob (F-statistic):           6.33e-08
+Time:                        15:26:40   Log-Likelihood:                -313.99
+No. Observations:                  99   AIC:                             644.0
+Df Residuals:                      91   BIC:                             664.7
+Df Model:                           7                                         
+Covariance Type:                  HC1                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------
+const          5.2838      1.950      2.710      0.008         1.411     9.157
+y1_IV         -3.9659      2.546     -1.558      0.123        -9.023     1.091
+y2_IV          4.1134      3.159      1.302      0.196        -2.161    10.388
+y3_IV         18.1596     10.179      1.784      0.078        -2.060    38.379
+lag_1          0.4162      0.111      3.748      0.000         0.196     0.637
+lag_2          0.1218      0.122      0.995      0.323        -0.121     0.365
+lag_3          0.0283      0.093      0.306      0.761        -0.156     0.212
+lag_4          0.0770      0.098      0.789      0.432        -0.117     0.271
+==============================================================================
+Omnibus:                       44.406   Durbin-Watson:                   1.978
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              103.652
+Skew:                           1.720   Prob(JB):                     3.11e-23
+Kurtosis:                       6.646   Cond. No.                         793.
+==============================================================================
+
+Warnings:
+[1] Standard Errors are heteroscedasticity robust (HC1)

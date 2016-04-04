@@ -7,9 +7,11 @@ Created on Fri Mar 11 14:50:22 2016
 """
 # preamble
 import numpy as np
+import pandas as pd
+import time
 from scipy.stats import norm
-from matplotlib import pyplot,style
-style.use('ggplot')
+import sys
+from matplotlib import pyplot
 
 # using Metropolis-Hastings sampling for mean calculation
 def doEpidemicModel(crisis_data,n_iter): 
@@ -176,7 +178,8 @@ class epidemicModel(object):
             self.draw_next_MH_sample()
             # update the moments
             m1 += self.current
-            m2 += np.power(self.current,2)           
+            # comment this in hopes of performance enhancement
+            #m2 += np.power(self.current,2)           
         # return the mean and variance, calculated from the moments
         return np.array([self.p*np.eye(self.N)+m1/counter, m2/counter-np.power(m1/counter,2)])#np.array([m1/counter, m2/counter-np.power(m1/counter,2)])
            
@@ -209,8 +212,23 @@ class epidemicModel(object):
         return np.sum(np.log(np.abs( ll )))
       
 # This if statement is only executed if this file is directly sourced. Basically,
-# this specifies which functions to run when we want to debug this module.      
+# this specifies which functions to run when we want to debug this module.  
+def doe_iets(df,window_size, period,n_iter):
+    results = doEpidemicModel(df,n_iter=n_iter)
+    fname = 'epidemic model - windowsize %d - period %d - iter %d - %f.npy'%(window_size,period,n_iter,time.time())
+    np.save(fname, results)
+   
 if __name__ == '__main__':
-    L,I = test_data(5,100)    
-    doEpidemicModel(I,10)
-    printout(np.array([[1,2],[3,4]]))
+    start = int(sys.argv[1])
+    stop = int(sys.argv[2])
+    df = pd.read_excel('CrisisPerSector.xlsx',index_col=0,converters={i:bool for i in range(1,15)})
+    df.index = pd.date_range(start='1-1-1952', end='31-12-2015', freq='Q')
+    nprocs =1
+    n_iter = 1e7
+    window_size = 100
+    start_time = time.time()
+    print('data read succesfull. window size {}, no. of iters {}, running windows {} through to {}.'.format(window_size,n_iter,start,stop))
+    for i in np.arange(start,stop):
+        print('start window {}. ETA {}.'.format(i, (stop-i)*(time.time() - start_time)/max(1,i) ))
+        doe_iets(df.iloc[i:i+window_size+1,:],window_size,i,n_iter)
+        
