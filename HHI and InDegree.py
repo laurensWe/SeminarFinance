@@ -11,7 +11,7 @@ import numpy as np
 from matplotlib.mlab import PCA
 import os
 
-wd = 'C:\\Users\\Beert\\Documents\\SeminarFinance\\Instruments\\'
+wd = 'C:\\Users\\laure\\SharePoint\\Seminar - Documents\\Data\\Interconnectedness\\6-Sectors\\Indices-Models\\PerSector\\'
 
 #%% Initialisation, detemines what data to read.
 
@@ -88,12 +88,12 @@ df2 = pd.DataFrame(df,index=mii,columns=mic)
 #%% Calculate the In Degree interconnectedness measure
 
 print('ik ga nu de inDegrees maken')
-inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
-systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
-systemInDegree = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
 thresholds = [0.002, 0.005, 0.01, 0.02]
 
 for threshold in thresholds:
+    systemInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+    systemInDegree = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+    inDegree = pd.DataFrame(index=instruments.index, columns=sectors.columns)
     for dates in instruments.index:
         tempDate = df2.loc[dates].transpose().sum(level=[1])
         totals = tempDate.sum()
@@ -106,14 +106,17 @@ for threshold in thresholds:
                 inDegree.loc[dates,secprim] = count / (amountSec - 1)
         #SYSTEM
         #Calculate the weighted average of the System, the weight is dependent from the relative size of the total assets from that specific sector.    
+        totalInDegree = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
+        totalInDegreeWA = pd.DataFrame(0,columns=['SystemInDegree'],index=instruments.index)
         for sec in totals.index:
             systemInDegreeWA.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]*(tempDate[sec].sum()/(Total.loc[dates][Total.loc[dates] != float('inf')].sum()))
             # equaly weighted average for the system estimate        
-            systemInDegree.loc[dates,'SystemInDegree'] = systemInDegreeWA.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]/len(Shares)
+            totalInDegree.loc[dates,'SystemInDegree'] = totalInDegree.loc[dates,'SystemInDegree'] + inDegree.loc[dates,sec]
+        systemInDegree.loc[dates,'SystemInDegree'] = totalInDegree.loc[dates,'SystemInDegree'] / len(Shares)
 
     print('System inDegrees with weights from PCA')    
     #SYSTEM
-
+    
     #calculates the weights based on the first principal component
     matrix = inDegree.as_matrix().astype('float')
     pca = PCA(matrix)
@@ -123,7 +126,7 @@ for threshold in thresholds:
     systemInDegreeWA.to_excel(wd + 'SystemInDegreeWA' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
     systemInDegree.to_excel(wd + 'SystemInDegree' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
     pd.DataFrame(systemInDegreePCA).to_excel(wd + 'SytemInDegreePCA' + str(threshold) + '_' + str(len(Shares)) +'.xlsx')
-    inDegree.to_excel(wd+'InDegree_'+ str(len(Shares)) +'.xlsx')
+    inDegree.to_excel(wd+'InDegree'+ str(threshold) + '_' + str(len(Shares)) +'.xlsx')
         
 #%% Calculates the HHI interconnectedness measure
 
