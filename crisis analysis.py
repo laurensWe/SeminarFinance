@@ -8,19 +8,10 @@ import itertools
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot,style
-import statsmodels.formula.api as sf
 import statsmodels.api as sm
-from scipy.stats import chi2
 from statsmodels.tsa.stattools import lagmat
 from statsmodels.sandbox.tools.tools_pca import pca
-import statsmodels.tsa.api as tsa
-from pandas.tools.plotting import autocorrelation_plot
-import os
 style.use('ggplot')
-
-def lltest(key,model0,modelA):
-    stat = 2*(modelA.llf - model0.llf)
-    return {(key,'stat'):round(stat,4), (key,'prob'):round(1-chi2.cdf(stat, modelA.df_model-model0.df_model),4)}
     
 def fresults(key,f_test):
     return {(key,'stat'):round(float(f_test.fvalue),4), (key,'prob'):round(float(f_test.pvalue),4)}
@@ -95,11 +86,11 @@ for col in dfz.columns:
 tests = dict(zip(dfz.columns, [{} for _ in dfz.columns]))
 
 # stel de restrictiematrices op die we gebruiken voor de f-test
-no_lags = np.concatenate( np.zeros([nlags,2*npc]), np.eye(nlags) )
-no_resid = np.concatenate( np.zeros([npc,npc]), np.eye(npc), np.zeros([npc,nlags]) )
-no_iv = np.concatenate( np.eye(npc), np.zeros([npc, npc+nlags]) )
-no_resid_lags = np.concatenate( np.zeros(npc,npc), np.eye(npc) )
-no_iv_lags = np.concatenate( np.eye(npc), np.zeros(npc,npc) )
+no_lags = np.concatenate( [np.zeros([nlags,2*npc+1]), np.eye(nlags)], axis=1 )
+no_resid = np.concatenate( [np.zeros([npc,npc+1]), np.eye(npc), np.zeros([npc,nlags])], axis=1 )
+no_iv = np.concatenate( [np.zeros([npc,1]), np.eye(npc), np.zeros([npc, npc+nlags])], axis=1 )
+no_resid_lags = np.concatenate( [np.zeros([npc,npc+1]), np.eye(npc)], axis=1 )
+no_iv_lags = np.concatenate( [np.zeros([npc,1]), np.eye(npc), np.zeros([npc,npc])], axis=1 )
 
 # doe alle tests. De f-test voer je uit door de restrictiematrix op te geven
 for col in dfz.columns:
@@ -108,125 +99,60 @@ for col in dfz.columns:
     fresults('f-test on iv in var',estims[col]['VARX-direct'].f_test( no_iv )),
     fresults('f-test on residuals in var',estims[col]['VARX-direct'].f_test( no_resid )),
     fresults('f-test on iv in ols',estims[col]['direct'].f_test( no_iv_lags )),
-    fresults('f-test on residuals in ols',estims[col]['direct'].f_test( no_resid_lags )),
+    fresults('f-test on residuals in ols',estims[col]['direct'].f_test( no_resid_lags ))] ))
 
 # schrijf de resultaten weg naar een excel
 pd.DataFrame(tests).to_excel('results/significances of IV leverage interconnectedness stability.xlsx')
 
 #%% Maak een keuze welk model je bij welke stability measure je wilt
 
-# dit is handwerk, sla de regressies die we willen gebruiken handmatig op in een dict. Dat is makkelijker met de marginale effecten berekenen
+# TODO dit is handwerk, sla de regressies die we willen gebruiken handmatig op in een dict. Dat is makkelijker met de marginale effecten berekenen
 selection = {
-    'BCI OECD':estims['BCI OECD']['VARX-direct'],
-    'CCI OECD':estims['CCI OECD']['VARX-direct'],
-    'Comm. real estate p (y-o-y %ch)':estims['Comm. real estate p (y-o-y %ch)']['VARX-direct'],
-    'log-Debt/gdp':estims['log-Debt/gdp']['VARX-direct'],
-    'Federal funds effective rate':estims['Federal funds effective rate']['VARX-IV'],
-    'log-Financial assets/gdp: nonfin. corp.':estims['log-Financial assets/gdp: nonfin. corp.']['VARX-direct'],
-    'GDP GROWTH':estims['GDP GROWTH']['IV'],
-    'Inflation':estims['Inflation']['VARX-IV'],
-    'KCFSI':estims['KCFSI']['VARX-direct'],
-    'log-Total debt/equity: nonfin. corp.':estims['log-Total debt/equity: nonfin. corp.']['direct']}
-    
-def doeOpSelectie(fun):
-    return dict(zip(selection,map(fun, selection.values())))
+    'BCI OECD':'VARX-direct',
+    'CCI OECD':'VARX-direct',
+    'Comm. real estate p (y-o-y %ch)':'VARX-direct',
+    'log-Debt/gdp':'VARX-direct',
+    'Federal funds effective rate':'VARX-IV',
+    'log-Financial assets/gdp: nonfin. corp.':'VARX-direct',
+    'GDP GROWTH':'IV',
+    'Inflation':'VARX-IV',
+    'KCFSI':'VARX-direct',
+    'log-Total debt/equity: nonfin. corp.':'direct'}
+ 
+#%% Bereken de marginale effecten en de R^2 van de selectie
 
+# deze functie bepaalt wat voor regressie we hadden gekozen, en wat de marginale effecten zijn obv de parameters uit deze regressie
+def marginalEffect(series, kind):
+    if 'direct' in kind: 
+        return dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims[series][kind].params[0:2*npc].reshape(npc,2,order='F') ).reshape(4*npc,order='F')))
+    elif 'IV' in kind:
+        return dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims[series][kind].params[0:npc] )))
+    else:
+        return dict(zip(itertools.product(dfy.columns,['resid']), np.dot( evecs, estims[series][kind].params[0:npc] )))
 
-#%% SELECTION %%
+# hier worden de marginale effecten en de r^2 uitgerekend, samen in een dataframe gestopt en weggeschreven.
+pd.DataFrame.from_dict({series:marginalEffect(series,selection[series]) for series in selection}).append(
+    pd.DataFrame.from_dict(dict(zip(selection,map(lambda x: {('Rsquared',''):estims[x][selection[x]].rsquared}, selection))))).to_excel('results/selected marginal results.xlsx')
+ 
+#%% plot alle measures, de fitted values en de residuals in 1 figuur
 
-
-pd.DataFrame.from_dict({
-    'BCI OECD':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['BCI OECD']['VARX-direct'].params[0:6].reshape(3,2,order='F') ).reshape(12,order='F'))),
-    'CCI OECD':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['CCI OECD']['VARX-direct'].params[0:6].reshape(3,2,order='F')  ).reshape(12,order='F'))),
-    'Comm. real estate p (y-o-y %ch)':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['Comm. real estate p (y-o-y %ch)']['VARX-direct'].params[0:6].reshape(3,2,order='F')  ).reshape(12,order='F'))),
-    'log-Debt/gdp':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['log-Debt/gdp']['VARX-direct'].params[0:6].reshape(3,2,order='F')  ).reshape(12,order='F'))),
-    'Federal funds effective rate':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['Federal funds effective rate']['VARX-IV'].params[0:3] ))),
-    'log-Financial assets/gdp: nonfin. corp.':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['log-Financial assets/gdp: nonfin. corp.']['VARX-direct'].params[0:6].reshape(3,2,order='F')  ).reshape(12,order='F'))),
-    'GDP GROWTH':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['GDP GROWTH']['IV'].params[0:3] ))),
-    'Inflation':dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims['Inflation']['VARX-IV'].params[0:3] ))),
-    'KCFSI':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['KCFSI']['VARX-direct'].params[0:6].reshape(3,2,order='F') ).reshape(12,order='F'))),
-    'log-Total debt/equity: nonfin. corp.':dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims['log-Total debt/equity: nonfin. corp.']['direct'].params[0:6].reshape(3,2,order='F') ).reshape(12,order='F')))                                       
-                                       }).to_excel('results/selected results.xlsx') 
-
-dict(zip(selection,map(lambda x:x.rsquared, selection.values())))
-
-doeOpSelectie(lambda x: x.rsquared)
-
-ax = pyplot.subplot()
-doeOpSelectie(lambda x: ax = pyplot.subplot();ax.plot(x.resid);ax.plot(x.fittedvalues))
-
+# deze functie zorgt dat je x en y gewoon kunt plotten, ook als y minder datapunten bevat (bijv. bij VAR fitted values)
 def safeplot(ax,x,y,*args,**kwargs):
     m = len(x)-len(y)
     return ax.plot(x[m:],y,*args,**kwargs)
-        
-#%%
-
-fig = pyplot.figure(figsize=(9,9), tight_layout=True); i=0
+  
+# doe het plotten.
+fig = pyplot.figure(figsize=(15,15), tight_layout=True); i=0
 for key in selection:
     i+=1
-    ax = fig.add_subplot(4,3,i,title=key)
+    # TODO pas het aantal- en de verdeling van de subplots hier aan
+    ax = fig.add_subplot(7,2,i,title=key)
     ax2 = ax.twinx()
-    safeplot(ax2,dfz.index,selection[key].resid, label='residuals',color='black',alpha=.4)
-    safeplot(ax,dfz.index,selection[key].fittedvalues, label='fitted values', color='red')
+    safeplot(ax2,dfz.index,estims[key][selection[key]].resid, label='residuals',color='black',alpha=.4)
+    safeplot(ax,dfz.index,estims[key][selection[key]].fittedvalues, label='fitted values', color='red')
     dfz[key].plot(ax=ax, color='blue', label='series')
 line1, label1 = ax.get_legend_handles_labels()
 line2, label2 = ax2.get_legend_handles_labels()
 fig.legend(handles = line1+line2, labels = label1+label2,loc=8)   
 fig.tight_layout()
 pyplot.savefig('fitted-residual-actual/fitted-residual-actual.png')
-   
-   
-
-
-#%% VISUALS %%
-if False:
-    np.round(sep.corr()*100)
-    IV.corr()
-    dfy.corr()
-    dfx.corr()    
-    
-    for key in estims.keys():  
-        pyplot.clf()
-        ax = pyplot.subplot()
-        ax.plot(dfz[key])
-        pyplot.title(key)
-        for subkey in estims[key].keys():
-            pyplot.plot(estims[key][subkey].fittedvalues, axes = ax,label = subkey)
-        ax.legend(loc=3)
-        pyplot.savefig('{}.png'.format(key))
-        
-    IV.plot(title = 'leverage ~ instruments') 
-    dfy.plot(title = 'leverage' )
-    rem.plot(title = 'leverage ~ instruments -> residuals')
-
-    ax = pyplot.subplot()
-    dfz['GDP Growth Rate'].plot(ax=ax)
-    estims['GDP Growth Rate']['IV estimation'].fittedvalues.plot(ax=ax,label='IV fitted values')
-    tsa.AR(dfz['GDP Growth Rate']).fit(2).fittedvalues.plot(ax=ax,label='AR fitted values')
-    sm.OLS(dfz['GDP Growth Rate'], X).fit().fittedvalues.plot(ax=ax,label='ARX(IV) fitted values')
-    ax.legend()
-    
-for col in dfz.columns:
-    pyplot.clf()
-    ax = pyplot.subplot()
-    estims[col]['direct'].resid.plot(ax=ax,label='direct')
-    estims[col]['IV'].resid.plot(ax=ax,label='IV')
-    estims[col]['rem'].resid.plot(ax=ax,label='rem' )
-    pyplot.title(col)
-    pyplot.legend()
-    pyplot.savefig(col.replace('/','-').replace(':',',')+'.png')
-    pyplot.clf()
-    ax = pyplot.subplot()
-    
-    # TODO deze indexen de goeie lengte maken, oordelen op heteroscedasticiteit enz.
-    ax.plot(dfz.index, estims[col]['VARX-direct'].resid, label='VARX-direct')
-    ax.plot(dfz.index, estims[col]['VARX-IV'].resid, label='VARX-IV')
-    ax.plot(dfz.index, estims[col]['VARX-rem'].resid, label='VARX-rem' )
-    pyplot.title(col)
-    pyplot.legend()
-    pyplot.savefig(col.replace('/','-').replace(':',',')+'-VARX.png')
-    
-    
-    
-    
-    
