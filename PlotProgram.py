@@ -61,17 +61,26 @@ leverage14Sectors.plot(subplots=True, layout=(4,4))
 #%% The dataseries plot has been formatted in such a way that it can be interpreted with only black ink.
 # Also two plots on different axis :D.
 # initialisation
-interconmeasures = pd.read_excel(wd + "InterconMeas.xlsx")  
-R0 = pd.read_excel(wd + "R0s.xlsx")   
+interconmeasures = pd.read_excel("WA_intercon_6sec.xlsx")  
+R0 = pd.read_excel("R0_6sec.xlsx")   
 interconmeasures = interconmeasures.set_index(interconmeasures.Date)
 R0 = R0.set_index(R0.Date)          
 markers1 = ['-v','-p','-s','-*', '-^']
-ax = interconmeasures.plot(style=markers1, color='grey')
+colors=['0.2', '0.3', '0.4', '0.5', '0.6', '0.7']
+#ax = interconmeasures.plot(style=markers1, color='grey')
+ax=interconmeasures.plot(style=markers1, figsize=(14,6), color=colors)
 markers2 = ['-o']
-ax2 = R0.plot(secondary_y=True,ax=ax,linewidth=4.0, style=markers2, color='black')
+#ax2 = R0.plot(secondary_y=True,ax=ax,linewidth=4.0, style=markers2, color='black')
+ax2= ax.twinx()
+R0.plot(ax=ax2, color='k', linewidth=3, style=markers2)
+#ax.legend(bbox_to_anchor=(1.23, 1), prop={'size':16})
+#ax2.legend(bbox_to_anchor=(1.21, 0.65), prop={'size':16})
 h1,l1 = ax.get_legend_handles_labels()
-h2, l2 = ax2.get_legend_handles_labels()
-pyplot.legend(h1+h2, l1, loc=2)
+h2,l2 = ax2.get_legend_handles_labels()
+ax2.legend(h1+h2,l1+l2,loc =2)
+ax.legend_.remove()
+
+#pyplot.legend(h1+h2, l1, loc=2)
 
 
 #%% t
