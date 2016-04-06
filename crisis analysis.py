@@ -16,13 +16,14 @@ style.use('ggplot')
 def fresults(key,f_test):
     return {(key,'stat'):round(float(f_test.fvalue),4), (key,'prob'):round(float(f_test.pvalue),4)}
 
-# Hier bepaal je over welk tijdsframe je gaat analyseren. Dit is gekozen obv een window van 100.
-start,stop = [pd.Timestamp('1969-07-01 00:00:00'),pd.Timestamp('2015-07-01 00:00:00')]
-
+# Hier bepaal je over welk tijdsframe je gaat analyseren. Dit is gekozen obv een window van 100. er stond 1969-07-01
+# Eva: Ik heb dit veranderd, volgens mij is dit voor een window van 70. 
+start,stop = [pd.Timestamp('1977-01-01 00:00:00'),pd.Timestamp('2015-04-01 00:00:00')]
 # lees de variabelen waarop we gaan regresseren    
 dfx = pd.read_excel('Interconnectednessmeasures.xlsx',index_col=0)[start:stop]
 dfy = pd.read_excel('leverages.xlsx',index_col=0)[start:stop]
 dfz = pd.read_excel('financial stability measures continuous.xlsx',index_col=1).drop('dropme',axis=1)[start:stop]
+dfz2 = pd.read_excel('financial stability measures categorical.xlsx',index_col=1).drop('dropme',axis=1)[start:stop]
 
 # Bereken de principal components, 3 stuks. gebruik evals om te beoordelen hoe veel componenten je wilt.
 npc = 3
@@ -55,8 +56,8 @@ for i in range(npc):
     # plot de lijntjes in het subplot, stel kleur en label in
     ax.plot(IV.iloc[:,i], color = 'red', label='interconnected leverage') 
     ax.plot(rem.iloc[:,i], color = 'grey', label='residual leverage') 
-    ax.plot(IV.index, dfy_pca[:,i], color = 'blue', label='principal component') 
-    
+    ax.plot(IV.index, pd.DataFrame(data=dfy_pca[:,i]), color = 'blue', label='principal component') 
+
 # verzamel de lijnen en kleuren van de laatste plot (ze zijn immers allemaal hetzelfde)
 h,l = ax.get_legend_handles_labels()    
 
@@ -68,7 +69,7 @@ fig.tight_layout()
 fig.savefig('pca-decomposition.png')    
 
 #%%
-
+nlags=4
 # verzamel alle mogelijke regressies met robuste errors in een dictionary. deze kun je dan als volgt uitlezen: regressie = estims['stability measure naam']['type regressie']
 estims = {}
 for col in dfz.columns:
@@ -78,6 +79,13 @@ for col in dfz.columns:
                         'VARX-IV':    sm.OLS(dfz[col], sm.add_constant(IV.join(pd.DataFrame(lagmat(dfz[col], maxlag=nlags),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results(), 
                         'VARX-rem':   sm.OLS(dfz[col], sm.add_constant(rem.join(pd.DataFrame(lagmat(dfz[col], maxlag=nlags),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results(),
                         'VARX-direct':sm.OLS(dfz[col], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz[col], maxlag=nlags),columns=['lag_1','lag_2','lag_3','lag_4'], index=dfz.index))), missing='drop').fit().get_robustcov_results() }
+#logit regressie doen
+logitregressie={}
+logitregressie['NBER recessie'] = {'logit no lag': sm.Logit(dfz2['NBER_RECESSIONS'], sm.add_constant(sep), missing='drop').fit()}
+sm.Logit(dfz2['NBER_RECESSIONS'], sm.add_constant(sep), missing='drop').fit().summary()
+nlaglogit=1
+logitregressie['NBER recessie'] = {'logit lag': sm.Logit(dfz2['NBER_RECESSIONS'], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz2['NBER_RECESSIONS'], maxlag=nlaglogit),columns=['lag_1'], index=dfz.index))), missing='drop').fit()}
+sm.Logit(dfz2['NBER_RECESSIONS'], sm.add_constant(sep.join(pd.DataFrame(lagmat(dfz2['NBER_RECESSIONS'], maxlag=nlaglogit),columns=['lag_1'], index=dfz.index))), missing='drop').fit().summary()
 
 
 #%% doe joint significantie test op lags en iv/resid met/zonder lags
@@ -118,7 +126,7 @@ selection = {
     'Inflation':'VARX-IV',
     'KCFSI':'VARX-direct',
     'log-Total debt/equity: nonfin. corp.':'direct'}
- 
+selection2 = {'NBER recessie':'logit lag'}
 #%% Bereken de marginale effecten en de R^2 van de selectie
 
 # deze functie bepaalt wat voor regressie we hadden gekozen, en wat de marginale effecten zijn obv de parameters uit deze regressie
@@ -127,13 +135,19 @@ def marginalEffect(series, kind):
         return dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, estims[series][kind].params[0:2*npc].reshape(npc,2,order='F') ).reshape(4*npc,order='F')))
     elif 'IV' in kind:
         return dict(zip(itertools.product(dfy.columns,['IV']), np.dot( evecs, estims[series][kind].params[0:npc] )))
+    elif 'logit' in kind:
+        return dict(zip(itertools.product(dfy.columns,['IV','resid']), np.dot( evecs, logitregressie[series][kind].params[0:2*npc].reshape(npc,2,order='F') ).reshape(4*npc,order='F')))
     else:
         return dict(zip(itertools.product(dfy.columns,['resid']), np.dot( evecs, estims[series][kind].params[0:npc] )))
 
 # hier worden de marginale effecten en de r^2 uitgerekend, samen in een dataframe gestopt en weggeschreven.
 pd.DataFrame.from_dict({series:marginalEffect(series,selection[series]) for series in selection}).append(
     pd.DataFrame.from_dict(dict(zip(selection,map(lambda x: {('Rsquared',''):estims[x][selection[x]].rsquared}, selection))))).to_excel('results/selected marginal results.xlsx')
- 
+
+pd.DataFrame.from_dict({series:marginalEffect(series,selection2[series]) for series in selection2}).append(
+    pd.DataFrame.from_dict(dict(zip(selection2,map(lambda x: {('Rsquared',''):logitregressie[x][selection2[x]].prsquared}, selection2))))).to_excel('results/selected marginal results logit.xlsx')
+
+
 #%% plot alle measures, de fitted values en de residuals in 1 figuur
 
 # deze functie zorgt dat je x en y gewoon kunt plotten, ook als y minder datapunten bevat (bijv. bij VAR fitted values)
@@ -146,13 +160,24 @@ fig = pyplot.figure(figsize=(15,15), tight_layout=True); i=0
 for key in selection:
     i+=1
     # TODO pas het aantal- en de verdeling van de subplots hier aan
-    ax = fig.add_subplot(7,2,i,title=key)
+    ax = fig.add_subplot(4,3,i,title=key)
     ax2 = ax.twinx()
     safeplot(ax2,dfz.index,estims[key][selection[key]].resid, label='residuals',color='black',alpha=.4)
     safeplot(ax,dfz.index,estims[key][selection[key]].fittedvalues, label='fitted values', color='red')
     dfz[key].plot(ax=ax, color='blue', label='series')
+#nog eens apart doen voor de logit regessie
+ax = fig.add_subplot(4,3,i+1,title='NBER recession')
+ax2=ax.twinx()
+ax2.set_ylim([-1,1])
+ax.set_ylim([-1,1])
+Xb=logitregressie['NBER recessie'][selection2['NBER recessie']].fittedvalues
+safeplot(ax2,dfz.index,logitregressie['NBER recessie'][selection2['NBER recessie']].resid_generalized, label='residuals', color='black', alpha=.4)
+safeplot(ax,dfz.index, np.exp(Xb)/(1+np.exp(Xb)), label='fitted values', color='red')
+dfz2['NBER_RECESSIONS'].plot(ax=ax, color='blue', label='series')
+
 line1, label1 = ax.get_legend_handles_labels()
 line2, label2 = ax2.get_legend_handles_labels()
 fig.legend(handles = line1+line2, labels = label1+label2,loc=8)   
 fig.tight_layout()
 pyplot.savefig('fitted-residual-actual/fitted-residual-actual.png')
+
