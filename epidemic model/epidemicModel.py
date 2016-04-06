@@ -228,7 +228,7 @@ if __name__ == '__main__':
     window_size = 100
     start_time = time.time()
     print('data read succesfull. window size {}, no. of iters {}, running windows {} through to {}.'.format(window_size,n_iter,start,stop))
-    for i in np.arange(start,stop):
+    for i in [20,40,60,80,100,125]:#np.arange(start,stop):
         print('start window {}. ETA {}.'.format(i, (stop-i)*(time.time() - start_time)/max(1,i) ))
         doe_iets(df.iloc[i:i+window_size+1,:],window_size,i,n_iter)
         
