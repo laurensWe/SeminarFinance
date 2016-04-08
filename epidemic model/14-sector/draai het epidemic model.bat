@@ -1,3 +1,3 @@
-python "..\epidemicModel.py" 0 175
+python "..\epidemicModel.py" 91 96
 
 PAUSE
